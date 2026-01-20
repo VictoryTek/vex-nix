@@ -2,8 +2,7 @@
 
 {
   imports = [
-    # Import your local hardware-configuration.nix here if needed
-    # ./hardware-configuration.nix
+    ./hardware-configuration.nix
   ];
 
   # Bootloader
