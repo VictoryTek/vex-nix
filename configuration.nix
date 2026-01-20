@@ -3,6 +3,8 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./modules/desktop/gnome.nix
+    ./modules/packages/packages.nix
   ];
 
   # Bootloader
@@ -34,20 +36,6 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable GNOME Desktop Environment with GDM
-  services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-
-  # Enable Wayland on GDM (default)
-  services.displayManager.gdm.wayland = true;
-
-  # Configure keymap
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
   # Enable CUPS for printing
   services.printing.enable = true;
 
@@ -70,17 +58,6 @@
       # User-specific packages can go here
     ];
   };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # System packages
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    git
-    firefox
-  ];
 
   # Enable Flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
