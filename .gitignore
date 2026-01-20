@@ -1,0 +1,21 @@
+# Nix build results
+result
+result-*
+
+# Nix development environments
+.direnv/
+.envrc
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Analysis directory
+analysis/
