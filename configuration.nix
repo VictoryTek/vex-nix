@@ -6,8 +6,9 @@
   ];
 
   # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda";  # or /dev/vda for virtio
+  boot.loader.grub.useOSProber = true;
 
   # Hostname
   networking.hostName = "nixos";
@@ -35,11 +36,11 @@
 
   # Enable GNOME Desktop Environment with GDM
   services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Enable Wayland on GDM (default)
-  services.xserver.displayManager.gdm.wayland = true;
+  services.displayManager.gdm.wayland = true;
 
   # Configure keymap
   services.xserver.xkb = {
@@ -51,7 +52,7 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
