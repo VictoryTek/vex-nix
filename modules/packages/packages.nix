@@ -16,15 +16,23 @@
     fastfetch
     inxi
     pavucontrol
+    topgrade
     tailscale
     tmux
 
     # GNOME & Theming
+    bazaar
     bibata-cursors
+    kora-icon-theme
     gnome-tweaks
 
     # Terminal & Shell Enhancements
     ghostty
     starship
+  ];
+
+  # Packages to remove/exclude
+  environment.excludePackages = with pkgs; [
+    waydroid
   ];
 }
