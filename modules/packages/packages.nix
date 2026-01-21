@@ -5,32 +5,34 @@
   nixpkgs.config.allowUnfree = true;
 
   # System packages
-  environment.systemPackages = with pkgs; [
+  environment = {
+    systemPackages = with pkgs; [
     # Default packages
-    brave
-    firefox
-    git
-    wget
+      brave
+      firefox
+      git
+      wget
 
-    # System Utilities
-    blivet-gui
-    fastfetch
-    inxi
-    pavucontrol
-    topgrade
-    tailscale
-    tmux
+      # System Utilities
+      blivet-gui
+      fastfetch
+      inxi
+      pavucontrol
+      topgrade
+      tailscale
+      tmux
 
-    # GNOME & Theming
-    bazaar
-    bibata-cursors
-    kora-icon-theme
-    gnome-tweaks
+      # GNOME & Theming
+      bazaar
+      bibata-cursors
+      kora-icon-theme
+      gnome-tweaks
 
-    # Terminal & Shell Enhancements
-    ghostty
-    starship
-  ];
+      # Terminal & Shell Enhancements
+      ghostty
+      starship
+      ];
+  }
 
   systemd.user.services.spice-vdagent = {
     description = "SPICE Guest Session Agent";
@@ -42,23 +44,27 @@
     unitConfig.ConditionVirtualization = "vm";
   };
 
-  # Packages to remove/exclude
-  environment.excludePackages = with pkgs; [
-    gnome-photos
-    gnome-tour
-    cheese                                    # webcam tool
-    gnome-music
-    epiphany                                  # web browser
-    geary                                     # email reader
-    evince                                    # document viewer
-    gnome-characters
-    totem                                     # video player
-    tali                                      # poker game
-    iagno                                     # go game
-    hitori                                    # sudoku game
-    atomix                                    # puzzle game
-    gnome-maps
-    gnome-clocks
-    gnome-weather
-  ];
+  # Packages to be removed
+  environment = {
+    gnome = {
+      excludePackages = with pkgs; [
+        gnome-photos
+        gnome-tour
+        cheese                        # webcam tool
+        gnome-music
+        epiphany                      # web browser
+        geary                         # email reader
+        evince                        # document viewer
+        gnome-characters
+        totem                         # video player
+        tali                          # poker game
+        iagno                         # go game
+        hitori                        # sudoku game
+        atomix                        # puzzle game
+        gnome-maps
+        gnome-clocks
+        gnome-weather
+      ];
+    };
+  };
 }
