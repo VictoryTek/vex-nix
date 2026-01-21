@@ -10,6 +10,10 @@
     ./modules/desktop/gnome.nix
   ];
 
+  # Bootloader configuration (add to hardware-configuration.nix if auto-generated one is missing it)
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda"; # For legacy BIOS systems
+
   # Networking
   networking.hostName = "vex-nix";
   networking.networkmanager.enable = true;
