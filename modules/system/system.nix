@@ -1,10 +1,36 @@
 { config, pkgs, lib, ... }:
 
+let
+  ge = pkgs.gnomeExtensions;
+  desiredExtAttrs = [
+    "alphabetical-app-grid"
+    "appindicatorsupport"
+    "background-logo"
+    "blur-my-shell"
+    "caffeine"
+    "dash-to-dock"
+    "gnome-ui-tune"
+    "just-perfection-desktop"
+    "nothing-to-say"
+    "quick-settings-tweaks"
+    "steal-my-focus-window"
+    "tailscale"
+    "tilingshell"
+  ];
+
+  getUuid = name: if lib.attrExists name ge then (
+      if lib.attrExists "extensionUuid" (ge.${name}) then ge.${name}.extensionUuid else name
+    ) else name;
+
+  enabledList = lib.filter (x: x != null) (lib.map getUuid desiredExtAttrs);
+  enabledExtsText = "[" + lib.concatStringsSep ", " (lib.map (x: "'" + x + "'") enabledList) + "]";
+in
+
 {
   # Install custom wallpapers and logos to system
   environment.etc."wallpapers/vex-bb-light.jxl".source = ../../assets/wallpaper/vex-bb-light.jxl;
   environment.etc."wallpapers/vex-bb-dark.jxl".source = ../../assets/wallpaper/vex-bb-dark.jxl;
-  environment.etc."pixmaps/vex.png".source = ../../assets/logo/vex.png;  # Uncomment and adjust path if you have a logo
+  environment.etc."usr/share/pixmaps/vex.png".source = ../../assets/logo/vex.png;  # Install logo to /usr/share/pixmaps/
 
   # Enable dconf
   programs.dconf.enable = true;
@@ -47,7 +73,7 @@
     # Shell Settings
     [org/gnome/shell]
     disable-user-extensions=false
-    enabled-extensions=['AlphabeticalAppGrid@stuarthayhurst', 'appindicatorsupport@rgcjonas.gmail.com', 'background-logo@fedorahosted.org', 'blur-my-shell@aunetx', 'caffeine@patapon.info', 'dash-to-dock@micxgx.gmail.com', 'gnome-ui-tune@itstime.tech', 'just-perfection-desktop@just-perfection', 'nothing-to-say@extensions.gnome.wouter.bolsterl.ee', 'quick-settings-tweaks@qwreey', 'steal-my-focus-window@steal-my-focus-window', 'tailscale@joaophi.github.com', 'tilingshell@ferrarodomenico.com']
+    enabled-extensions=${enabledExtsText}
     favorite-apps=['com.brave.Browser.desktop', 'io.gitlab.librewolf-community.desktop', 'tv.plex.PlexDesktop.desktop', 'io.freetubeapp.FreeTube.desktop', 'org.gnome.Nautilus.desktop', 'com.mitchellh.ghostty.desktop', 'system-update.desktop']
 
     # Logo Widget Extension
