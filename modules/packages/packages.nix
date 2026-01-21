@@ -32,7 +32,7 @@
       ghostty
       starship
       ];
-  }
+  };
 
   systemd.user.services.spice-vdagent = {
     description = "SPICE Guest Session Agent";
