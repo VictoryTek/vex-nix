@@ -6,12 +6,9 @@
   # Import modules
   imports = [
     ./modules/packages/packages.nix
+    ./modules/packages/flatpak.nix
     ./modules/desktop/gnome.nix
   ];
-
-  # Bootloader configuration
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   # Networking
   networking.hostName = "vex-nix";
