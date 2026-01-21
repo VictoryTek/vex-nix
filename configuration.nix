@@ -2,7 +2,7 @@
 
 {
   imports = [
-    /etc/nixos/hardware-configuration.nix
+    ./hardware-configuration.nix
     ./modules/desktop/gnome.nix
     ./modules/packages/packages.nix
   ];
