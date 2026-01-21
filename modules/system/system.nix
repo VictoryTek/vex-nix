@@ -18,8 +18,8 @@ let
     "tilingshell"
   ];
 
-  getUuid = name: if lib.attrExists name ge then (
-      if lib.attrExists "extensionUuid" (ge.${name}) then ge.${name}.extensionUuid else name
+  getUuid = name: if builtins.hasAttr name ge then (
+      if builtins.hasAttr "extensionUuid" (ge.${name}) then ge.${name}.extensionUuid else name
     ) else name;
 
   enabledList = lib.filter (x: x != null) (lib.map getUuid desiredExtAttrs);
