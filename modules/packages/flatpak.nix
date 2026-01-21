@@ -20,10 +20,7 @@
     path = [ pkgs.flatpak ];
     script = ''
       # Install Flatpak applications
-      flatpak install -y flathub com.spotify.Client
-      flatpak install -y flathub org.telegram.desktop
-      # Add more flatpak apps here in the format:
-      # flatpak install -y flathub <app-id>
+      flatpak install -y flathub com.brave.Browser
     '';
     serviceConfig = {
       Type = "oneshot";
