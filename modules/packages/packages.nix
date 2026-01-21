@@ -17,6 +17,7 @@
       fastfetch
       inxi
       pavucontrol
+      plex-desktop
       topgrade
       tailscale
       tmux
