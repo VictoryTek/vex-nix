@@ -28,8 +28,8 @@ in
 
 {
   # Install custom wallpapers and logos to system
-  environment.etc."wallpapers/vex-bb-light.jxl".source = ../../assets/wallpaper/vex-bb-light.jxl;
-  environment.etc."wallpapers/vex-bb-dark.jxl".source = ../../assets/wallpaper/vex-bb-dark.jxl;
+  environment.etc."wallpapers/vex-bb-light.jxl".source = ../../assets/wallpapers/vex-bb-light.jxl;
+  environment.etc."wallpapers/vex-bb-dark.jxl".source = ../../assets/wallpapers/vex-bb-dark.jxl;
   environment.etc."usr/share/pixmaps/vex.png".source = ../../assets/logo/vex.png;  # Install logo to /usr/share/pixmaps/
 
   # Enable dconf
