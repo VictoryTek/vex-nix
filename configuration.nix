@@ -9,6 +9,7 @@
     ./modules/packages/flatpak.nix
     ./modules/desktop/gnome.nix
     ./modules/desktop/gnome-extensions.nix
+    ./modules/system/system.nix
   ];
 
   # Bootloader configuration (add to hardware-configuration.nix if auto-generated one is missing it)
