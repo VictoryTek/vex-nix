@@ -28,7 +28,6 @@
       flatpak install -y flathub it.mijorus.gearlever
       flatpak install -y flathub org.gnome.TextEditor
       flatpak install -y flathub io.missioncenter.MissionCenter
-      flatpak install -y flathub tv.plex.PlexDesktop
       flatpak install -y flathub com.rustdesk.RustDesk
       flatpak install -y flathub org.gnome.seahorse.Application
       flatpak install -y flathub com.github.unrud.VideoDownloader
