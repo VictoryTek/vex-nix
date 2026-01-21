@@ -11,4 +11,6 @@ sudo cp -r vex-nix/.git .
 
 sudo rm -rf vex-nix
 
+git add hardware-configuration.nix
+
 sudo nixos-rebuild switch --flake /etc/nixos#vex-nix
