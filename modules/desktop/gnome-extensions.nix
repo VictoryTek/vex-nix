@@ -18,7 +18,7 @@ let
     "tilingshell"
   ];
 
-  installable = lib.filter (x: x != null) (lib.map (n: if lib.attrExists n ge then ge.${n} else null) desired);
+  installable = lib.filter (x: x != null) (lib.map (n: if builtins.hasAttr n ge then ge.${n} else null) desired);
 in
 {
   # GNOME Extensions: install packaged extensions when available
