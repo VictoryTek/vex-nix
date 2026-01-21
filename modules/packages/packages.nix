@@ -7,9 +7,10 @@
   # System packages
   environment.systemPackages = with pkgs; [
     # Default packages
-    wget
-    git
+    brave
     firefox
+    git
+    wget
 
     # System Utilities
     blivet-gui
@@ -43,6 +44,21 @@
 
   # Packages to remove/exclude
   environment.excludePackages = with pkgs; [
-    waydroid
+    gnome-photos
+    gnome-tour
+    cheese                                    # webcam tool
+    gnome-music
+    epiphany                                  # web browser
+    geary                                     # email reader
+    evince                                    # document viewer
+    gnome-characters
+    totem                                     # video player
+    tali                                      # poker game
+    iagno                                     # go game
+    hitori                                    # sudoku game
+    atomix                                    # puzzle game
+    gnome-maps
+    gnome-clocks
+    gnome-weather
   ];
 }
