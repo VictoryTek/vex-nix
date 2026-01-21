@@ -9,6 +9,6 @@ sudo cp -r vex-nix/* .
 
 sudo cp -r nix-test/.git .
 
-sudo rm -rf vex-nix
+sudo rm -rf nix-test
 
 sudo nixos-rebuild switch --flake /etc/nixos#vex-nix
