@@ -31,6 +31,16 @@
     starship
   ];
 
+  systemd.user.services.spice-vdagent = {
+    description = "SPICE Guest Session Agent";
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.spice-vdagent}/bin/spice-vdagent -x";
+      Restart = "on-failure";
+    };
+    unitConfig.ConditionVirtualization = "vm";
+  };
+
   # Packages to remove/exclude
   environment.excludePackages = with pkgs; [
     waydroid
