@@ -35,8 +35,8 @@ in
   environment.etc."starship.toml".source = ../../assets/system/etc/starship.toml;
   environment.etc."profile.d/starship.sh".source = ../../assets/system/etc/profile.d/starship.sh;
 
-  # Install custom os-release for VexHTPC branding
-  environment.etc."os-release".source = ../../assets/system/etc/os-release;
+  # Install custom os-release for VexHTPC branding (override NixOS default)
+  environment.etc."os-release".source = lib.mkForce ../../assets/system/etc/os-release;
 
   # Install logos and icons to /usr/share paths
   environment.etc."usr/share/pixmaps/vex.png".source = ../../assets/system/usr/share/pixmaps/vex.png;

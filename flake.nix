@@ -2,7 +2,7 @@
   description = "NixOS configuration with flakes for VexHTPC";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
   };
 
   outputs = { self, nixpkgs, ... }@inputs: {
