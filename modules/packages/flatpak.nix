@@ -31,6 +31,7 @@
       done
 
       # Install Flatpak applications
+      flatpak install flathub io.github.kolunmi.Bazaar || true
       flatpak install -y flathub com.brave.Browser || true
       flatpak install -y flathub com.bitwarden.desktop || true
       flatpak install -y flathub com.mattjakeman.ExtensionManager || true

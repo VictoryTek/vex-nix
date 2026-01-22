@@ -23,7 +23,6 @@
       tmux
 
       # GNOME & Theming
-      bazaar
       bibata-cursors
       kora-icon-theme
       gnome-tweaks
