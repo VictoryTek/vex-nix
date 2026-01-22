@@ -50,7 +50,7 @@ in
           accent-color = "teal";
           icon-theme = "kora";
           cursor-theme = "Bibata-Modern-Classic";
-          cursor-size = 24;
+          cursor-size = lib.gvariant.mkInt32 24;
         };
 
         # Desktop Background
@@ -64,7 +64,7 @@ in
         "org/gnome/desktop/screensaver" = {
           picture-uri = "file:///etc/wallpapers/vex-bb-dark.jxl";
           picture-options = "zoom";
-          lock-enabled = false;
+          lock-enabled = lib.gvariant.mkBoolean false;
         };
 
         # Power Settings
@@ -80,7 +80,7 @@ in
 
         # Shell Settings
         "org/gnome/shell" = {
-          disable-user-extensions = false;
+          disable-user-extensions = lib.gvariant.mkBoolean false;
           enabled-extensions = enabledList;
           favorite-apps = [
             "com.brave.Browser.desktop"
@@ -106,12 +106,12 @@ in
 
         # Touchpad Settings
         "org/gnome/desktop/peripherals/touchpad" = {
-          tap-to-click = true;
+          tap-to-click = lib.gvariant.mkBoolean true;
         };
 
         # Privacy Settings
         "org/gnome/desktop/privacy" = {
-          remember-recent-files = true;
+          remember-recent-files = lib.gvariant.mkBoolean true;
         };
       };
     }
