@@ -27,10 +27,40 @@ let
 in
 
 {
-  # Install custom wallpapers and logos to system
+  # Install custom wallpapers
   environment.etc."wallpapers/vex-bb-light.jxl".source = ../../assets/wallpapers/vex-bb-light.jxl;
   environment.etc."wallpapers/vex-bb-dark.jxl".source = ../../assets/wallpapers/vex-bb-dark.jxl;
-  environment.etc."usr/share/pixmaps/vex.png".source = ../../assets/logo/vex.png;  # Install logo to /usr/share/pixmaps/
+
+  # Install Starship configuration system-wide
+  environment.etc."starship.toml".source = ../../assets/system/etc/starship.toml;
+  environment.etc."profile.d/starship.sh".source = ../../assets/system/etc/profile.d/starship.sh;
+
+  # Install custom os-release for VexHTPC branding
+  environment.etc."os-release".source = ../../assets/system/etc/os-release;
+
+  # Install logos and icons to /usr/share paths
+  environment.etc."usr/share/pixmaps/vex.png".source = ../../assets/system/usr/share/pixmaps/vex.png;
+  environment.etc."usr/share/pixmaps/fedora-gdm-logo.png".source = ../../assets/system/usr/share/pixmaps/fedora-gdm-logo.png;
+  environment.etc."usr/share/pixmaps/fedora-logo-small.png".source = ../../assets/system/usr/share/pixmaps/fedora-logo-small.png;
+  environment.etc."usr/share/pixmaps/fedora-logo-sprite.png".source = ../../assets/system/usr/share/pixmaps/fedora-logo-sprite.png;
+  environment.etc."usr/share/pixmaps/fedora-logo-sprite.svg".source = ../../assets/system/usr/share/pixmaps/fedora-logo-sprite.svg;
+  environment.etc."usr/share/pixmaps/fedora-logo.png".source = ../../assets/system/usr/share/pixmaps/fedora-logo.png;
+  environment.etc."usr/share/pixmaps/fedora_logo_med.png".source = ../../assets/system/usr/share/pixmaps/fedora_logo_med.png;
+  environment.etc."usr/share/pixmaps/fedora_whitelogo_med.png".source = ../../assets/system/usr/share/pixmaps/fedora_whitelogo_med.png;
+  environment.etc."usr/share/pixmaps/system-logo-white.png".source = ../../assets/system/usr/share/pixmaps/system-logo-white.png;
+
+  # Install update icon
+  environment.etc."usr/share/vex/update.png".source = ../../assets/system/usr/share/vex/update.png;
+
+  # Install hicolor icon
+  environment.etc."usr/share/icons/hicolor/256x256/vex-logo-icon.png".source = ../../assets/system/usr/share/icons/hicolor/256x256/vex-logo-icon.png;
+
+  # Install fedora logos
+  environment.etc."usr/share/fedora-logos/fedora_darkbackground.svg".source = ../../assets/system/usr/share/fedora-logos/fedora_darkbackground.svg;
+  environment.etc."usr/share/fedora-logos/fedora_lightbackground.svg".source = ../../assets/system/usr/share/fedora-logos/fedora_lightbackground.svg;
+
+  # Install Plymouth watermark
+  environment.etc."usr/share/plymouth/themes/spinner/watermark.png".source = ../../assets/system/usr/share/plymouth/themes/spinner/watermark.png;
 
   # Enable dconf
   programs.dconf.enable = true;

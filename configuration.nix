@@ -16,8 +16,12 @@
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda"; # For legacy BIOS systems
 
+  # Plymouth boot splash
+  boot.plymouth.enable = true;
+  boot.initrd.systemd.enable = true;
+
   # Networking
-  networking.hostName = "vex-nix";
+  networking.hostName = "vex-htpc";
   networking.networkmanager.enable = true;
 
   # Time zone and localization

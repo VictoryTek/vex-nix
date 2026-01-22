@@ -1,0 +1,11 @@
+NAME="VexHTPC"
+VERSION="26.05 (Based on NixOS Unstable)"
+ID=vex-htpc
+ID_LIKE=nixos
+VERSION_ID=26.05
+PLATFORM_ID="platform:nixos"
+PRETTY_NAME="VexHTPC (Based on NixOS)"
+ANSI_COLOR="0;36"
+CPE_NAME="cpe:/o:vex:htpc:26.05"
+DEFAULT_HOSTNAME="vex-htpc"
+HOME_URL="https://github.com/VictoryTek/vex-htpc"
