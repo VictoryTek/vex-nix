@@ -65,7 +65,7 @@
         gnome-clocks
         gnome-weather
         simple-scan                   # document scanner
-        gnome-extensions-app          # extensions app (using Extension Manager flatpak instead)
+        gnome-shell-extensions        # extensions app (using Extension Manager flatpak instead)
       ];
     };
   };
