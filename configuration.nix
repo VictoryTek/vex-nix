@@ -18,7 +18,7 @@
 
   # Plymouth boot splash
   boot.plymouth.enable = true;
-  boot.initrd.systemd.enable = true;
+  # boot.initrd.systemd.enable = true;  # Temporarily disabled - may cause boot issues
 
   # Networking
   networking.hostName = "vex-htpc";
