@@ -28,9 +28,6 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Enable the X11 windowing system
-  services.xserver.enable = true;
-
   # User account
   users.users.nimda = {
     isNormalUser = true;

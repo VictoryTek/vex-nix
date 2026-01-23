@@ -34,7 +34,9 @@
       flatpak install -y flathub io.github.kolunmi.Bazaar || true
       flatpak install -y flathub com.brave.Browser || true
       flatpak install -y flathub com.bitwarden.desktop || true
+      flatpak install -y flathub ca.desrt.dconf-editor || true
       flatpak install -y flathub com.mattjakeman.ExtensionManager || true
+      flatpak install -y flathub org.garudalinux.firedragon || true
       flatpak install -y flathub com.github.tchx84.Flatseal || true
       flatpak install -y flathub io.freetubeapp.FreeTube || true
       flatpak install -y flathub it.mijorus.gearlever || true
