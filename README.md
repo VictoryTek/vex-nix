@@ -11,4 +11,9 @@ sudo cp -r vex-nix/.git .
 
 sudo rm -rf vex-nix
 
-sudo nixos-rebuild switch --flake /etc/nixos#vex-htpc --impure
+# Choose GPU option
+sudo nixos-rebuild switch --flake /etc/nixos#vex-htpc-intel --impure
+
+sudo nixos-rebuild switch --flake /etc/nixos#vex-htpc-amd --impure
+
+sudo nixos-rebuild switch --flake /etc/nixos#vex-htpc-nvidia --impure
