@@ -30,6 +30,10 @@
       # Terminal & Shell Enhancements
       ghostty
       starship
+
+      # Gaming
+      steam
+      lutris
       ];
   };
 
