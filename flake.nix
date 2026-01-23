@@ -21,6 +21,12 @@
           modules = baseModules ++ [ ./modules/system/intel-acceleration.nix ];
         };
         
+        # Intel GPU variant (explicit)
+        vex-htpc-intel = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = baseModules ++ [ ./modules/system/intel-acceleration.nix ];
+        };
+        
         # AMD GPU variant
         vex-htpc-amd = nixpkgs.lib.nixosSystem {
           inherit system;
