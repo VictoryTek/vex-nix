@@ -40,6 +40,7 @@ in
 
   # Install logos and icons to /usr/share paths
   environment.etc."usr/share/pixmaps/vex.png".source = ../../assets/system/usr/share/pixmaps/vex.png;
+  environment.etc."usr/share/pixmaps/vex-text.png".source = ../../assets/system/usr/share/pixmaps/vex.png;
   environment.etc."usr/share/pixmaps/fedora-gdm-logo.png".source = ../../assets/system/usr/share/pixmaps/fedora-gdm-logo.png;
   environment.etc."usr/share/pixmaps/fedora-logo-small.png".source = ../../assets/system/usr/share/pixmaps/fedora-logo-small.png;
   environment.etc."usr/share/pixmaps/fedora-logo-sprite.png".source = ../../assets/system/usr/share/pixmaps/fedora-logo-sprite.png;
@@ -52,7 +53,10 @@ in
   # Install update icon
   environment.etc."usr/share/vex/update.png".source = ../../assets/system/usr/share/vex/update.png;
 
-  # Install hicolor icon
+  # Install hicolor icon theme entries for GNOME About page
+  # GNOME looks for icon theme entries, not direct file paths
+  environment.etc."usr/share/icons/hicolor/256x256/apps/vex.png".source = ../../assets/logo/vex.png;
+  environment.etc."usr/share/icons/hicolor/256x256/apps/vex-text.png".source = ../../assets/logo/vex.png;
   environment.etc."usr/share/icons/hicolor/256x256/vex-logo-icon.png".source = ../../assets/system/usr/share/icons/hicolor/256x256/vex-logo-icon.png;
 
   # Install fedora logos
@@ -114,8 +118,7 @@ in
           enabled-extensions = enabledList;
           favorite-apps = [
             "com.brave.Browser.desktop"
-            "io.gitlab.librewolf-community.desktop"
-            "tv.plex.PlexDesktop.desktop"
+            "plex-desktop.desktop"
             "io.freetubeapp.FreeTube.desktop"
             "org.gnome.Nautilus.desktop"
             "com.mitchellh.ghostty.desktop"
