@@ -10,7 +10,7 @@
       system = "x86_64-linux";
       baseModules = [
         ./configuration.nix
-        /etc/nixos/hardware-configuration.nix
+        ./hardware-configuration.nix
       ];
     in
     {
