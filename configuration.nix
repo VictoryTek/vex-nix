@@ -45,6 +45,9 @@
     substituters = [ "https://cache.nixos.org" ];
     trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
     auto-optimise-store = true;
+    # Automatically free disk space when it gets low during builds
+    min-free = 1073741824;  # 1GB - trigger GC if less than this free
+    max-free = 3221225472;  # 3GB - GC until this much is free
   };
 
   # Automatic garbage collection to prevent disk space issues
