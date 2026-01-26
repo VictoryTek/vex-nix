@@ -1,14 +1,21 @@
 { config, pkgs, lib, ... }:
 
+let
+  # Detect NVIDIA GPU from lspci output
+  hasNvidiaGpu = builtins.any (line: 
+    (builtins.match ".*(VGA|3D|Display).*NVIDIA.*" line != null) ||
+    (builtins.match ".*(VGA|3D|Display).*GeForce.*" line != null)
+  ) (lib.splitString "\n" (builtins.readFile "/proc/bus/pci/devices" or ""));
+in
 {
   # Hardware graphics acceleration for NVIDIA GPUs
   # Uses proprietary NVIDIA drivers for best performance and codec support
   # Includes NVENC/NVDEC hardware encoding/decoding
   
-  # Enable NVIDIA drivers
-  services.xserver.videoDrivers = [ "nvidia" ];
+  # Enable NVIDIA drivers only if NVIDIA GPU detected
+  services.xserver.videoDrivers = lib.mkIf hasNvidiaGpu [ "nvidia" ];
   
-  hardware = {
+  hardware = lib.mkIf hasNvidiaGpu {
     nvidia = {
       # Enable modesetting (required for Wayland)
       modesetting.enable = true;
@@ -33,18 +40,18 @@
   };
   
   # Set environment variables for NVIDIA hardware acceleration
-  environment.sessionVariables = {
+  environment.sessionVariables = lib.mkIf hasNvidiaGpu {
     LIBVA_DRIVER_NAME = "nvidia";  # VA-API via nvidia-vaapi-driver
     NVD_BACKEND = "direct";        # Use direct backend for better performance
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";  # Explicit GLX vendor
   };
 
   # Add utilities to test hardware acceleration
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = lib.mkIf hasNvidiaGpu (with pkgs; [
     libva-utils      # Provides 'vainfo' command to check VA-API
     vdpauinfo        # Provides 'vdpauinfo' to check VDPAU
     vulkan-tools     # Provides 'vulkaninfo' for Vulkan support
     nvidia-vaapi-driver  # VA-API support for NVIDIA
     nvtopPackages.full   # NVIDIA GPU monitoring tool
-  ];
+  ]);
 }

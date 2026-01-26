@@ -1,11 +1,17 @@
 { config, pkgs, lib, ... }:
 
+let
+  # Detect AMD GPU from lspci output
+  hasAmdGpu = builtins.any (line: 
+    (builtins.match ".*(VGA|3D|Display).*(AMD|ATI|Radeon).*" line != null)
+  ) (lib.splitString "\n" (builtins.readFile "/proc/bus/pci/devices" or ""));
+in
 {
   # Hardware graphics acceleration for AMD GPUs
   # Supports modern AMD Radeon cards with AMDGPU driver
   # For older cards, kernel parameters force amdgpu driver usage
   
-  hardware.graphics = {
+  hardware.graphics = lib.mkIf hasAmdGpu {
     enable = true;
     enable32Bit = true;  # For 32-bit applications and compatibility
     
@@ -24,7 +30,7 @@
   
   # Force amdgpu driver for older AMD cards (Southern Islands/Sea Islands)
   # Comment out if you have a modern AMD GPU
-  boot.kernelParams = [ 
+  boot.kernelParams = lib.mkIf hasAmdGpu [ 
     "radeon.si_support=0"   # Disable radeon driver for SI cards
     "amdgpu.si_support=1"   # Enable amdgpu for SI cards
     "radeon.cik_support=0"  # Disable radeon driver for CIK cards
@@ -32,11 +38,11 @@
   ];
 
   # Add utilities to test hardware acceleration
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = lib.mkIf hasAmdGpu (with pkgs; [
     libva-utils   # Provides 'vainfo' command to check VA-API
     vdpauinfo     # Provides 'vdpauinfo' to check VDPAU
     vulkan-tools  # Provides 'vulkaninfo' for Vulkan support
     clinfo        # Check OpenCL support
     radeontop     # AMD GPU monitoring tool
-  ];
+  ]);
 }
