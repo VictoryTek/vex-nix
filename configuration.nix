@@ -48,9 +48,7 @@
   # ------------------------------------------------------------
   # Users
   # ------------------------------------------------------------
-  # This does NOT override installer-created users
-  # It only adds configuration if the user exists
-  users.users.nimda = lib.mkIf (config.users.users ? nimda) {
+  users.users.nimda = {
     isNormalUser = true;
     extraGroups = [ "networkmanager" "wheel" ];
   };
