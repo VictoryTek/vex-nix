@@ -2,8 +2,8 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Disable PulseAudio
-  services.pulseaudio.enable = false;
+  # Disable PulseAudio (PipeWire replaces it)
+  hardware.pulseaudio.enable = lib.mkForce false;
   
   # Enable PipeWire
   security.rtkit.enable = true;

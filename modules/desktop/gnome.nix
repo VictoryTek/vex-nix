@@ -5,7 +5,10 @@
   # Enable X11 and GNOME
   services.xserver = {
     enable = true;
-    displayManager.gdm.enable = true;
+    displayManager.gdm = {
+      enable = true;
+      wayland = true;  # Enable Wayland by default
+    };
     desktopManager.gnome.enable = true;
   };
 
