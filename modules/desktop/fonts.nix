@@ -11,8 +11,7 @@
       liberation_ttf
       
       # Nerd fonts for terminal/coding
-      nerd-fonts.fira-code
-      nerd-fonts.jetbrains-mono
+      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
     ];
     
     # Font configuration
