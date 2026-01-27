@@ -20,7 +20,6 @@
     btop
     
     # Text editors
-    vim
     nano
     
     # Network tools
