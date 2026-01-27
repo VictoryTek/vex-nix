@@ -2,10 +2,14 @@
 
 let
   # Detect NVIDIA GPU from lspci output
+  pciDevicesPath = "/proc/bus/pci/devices";
+  pciDevicesContent = if builtins.pathExists pciDevicesPath 
+    then builtins.readFile pciDevicesPath 
+    else "";
   hasNvidiaGpu = builtins.any (line: 
     (builtins.match ".*(VGA|3D|Display).*NVIDIA.*" line != null) ||
     (builtins.match ".*(VGA|3D|Display).*GeForce.*" line != null)
-  ) (lib.splitString "\n" (builtins.readFile "/proc/bus/pci/devices" or ""));
+  ) (lib.splitString "\n" pciDevicesContent);
 in
 {
   # Hardware graphics acceleration for NVIDIA GPUs
