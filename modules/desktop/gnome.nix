@@ -1,17 +1,25 @@
-{ config, pkgs, ... }:
+# GNOME Desktop Environment configuration
+{ config, pkgs, lib, ... }:
 
 {
-  # Enable GNOME Desktop Environment with GDM
-  services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Enable Wayland on GDM (default)
-  services.xserver.displayManager.gdm.wayland = true;
-
-  # Configure keymap
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
+  # Enable X11 and GNOME
+  services.xserver = {
+    enable = true;
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
   };
+
+  # Exclude some default GNOME packages
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour
+    epiphany      # web browser
+    geary         # email client
+    gnome-music
+  ];
+
+  # GNOME-specific packages
+  environment.systemPackages = with pkgs; [
+    gnome-tweaks
+    dconf-editor
+  ];
 }

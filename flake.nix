@@ -1,49 +1,81 @@
 {
-  description = "NixOS configuration with flakes for VexHTPC";
+  description = "VexOS - NixOS configurations for desktop, HTPC, and server variants";
 
   inputs = {
+    # NixOS stable channel
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    
+    # Unstable for bleeding-edge packages when needed
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: 
+  outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
     let
-      system = "x86_64-linux";
-      baseModules = [
-        ./configuration.nix
-        /etc/nixos/hardware-configuration.nix
-      ];
-    in
-    {
-      nixosConfigurations = {
-        # Intel GPU variant (default)
-        vex-htpc = nixpkgs.lib.nixosSystem {
+      # Supported systems
+      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
+      
+      # Helper to generate attributes for each system
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      
+      # Common specialArgs passed to all configurations
+      mkSpecialArgs = system: {
+        inherit inputs;
+        # Access to unstable packages when needed
+        pkgs-unstable = import nixpkgs-unstable {
           inherit system;
-          modules = baseModules ++ [ ./modules/system/intel-acceleration.nix ];
-        };
-        
-        # Intel GPU variant (explicit)
-        vex-htpc-intel = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = baseModules ++ [ ./modules/system/intel-acceleration.nix ];
-        };
-        
-        # AMD GPU variant
-        vex-htpc-amd = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = baseModules ++ [ ./modules/system/amd-acceleration.nix ];
-        };
-        
-        # NVIDIA GPU variant
-        vex-htpc-nvidia = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = baseModules ++ [ ./modules/system/nvidia-acceleration.nix ];
-        };
-        
-        # No GPU acceleration (fallback)
-        vex-htpc-basic = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = baseModules;
+          config.allowUnfree = true;
         };
       };
+      
+      # Helper function to create NixOS configurations
+      mkHost = { hostname, system ? "x86_64-linux", variant }: 
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = mkSpecialArgs system;
+          modules = [
+            # Host-specific configuration
+            ./hosts/${hostname}
+            
+            # Set the hostname
+            { networking.hostName = hostname; }
+          ];
+        };
+    in
+    {
+      # NixOS configurations for each variant
+      nixosConfigurations = {
+        # Desktop variant (main workstation)
+        vex-os = mkHost {
+          hostname = "vex-os";
+          variant = "desktop";
+        };
+        
+        # HTPC variant (home theater PC)
+        vex-htpc = mkHost {
+          hostname = "vex-htpc";
+          variant = "htpc";
+        };
+        
+        # Server variant
+        vex-svr = mkHost {
+          hostname = "vex-svr";
+          variant = "server";
+        };
+      };
+      
+      # Development shells for working on this flake
+      devShells = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            packages = with pkgs; [
+              nil           # Nix LSP
+              nixfmt-rfc-style  # Nix formatter
+            ];
+          };
+        }
+      );
     };
 }
