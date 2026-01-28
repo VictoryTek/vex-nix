@@ -4,8 +4,8 @@
 {
   environment.systemPackages = with pkgs; [
     # Default Apps
-    gnome-extensions-manager
-    
+    gnome-extension-manager  # Correct package name (no 's' in extension)
+
     # Essential utilities
     curl
     fastfetch
