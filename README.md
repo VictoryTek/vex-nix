@@ -42,3 +42,9 @@ sudo nixos-rebuild switch --flake .#vex-htpc --impure
   ```bash
   sudo nixos-rebuild switch --flake .#vex-svr --impure
   ```
+
+### Virtual Machine Variants
+- **`vex-vm`** - Virtual Machine with auto-detected guest services
+  ```bash
+  sudo nixos-rebuild switch --flake .#vex-vm --impure
+  ```

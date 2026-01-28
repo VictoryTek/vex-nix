@@ -61,6 +61,12 @@
           hostname = "vex-svr";
           variant = "server";
         };
+        
+        # Virtual Machine variant (auto-detects QEMU, VirtualBox, VMware, Hyper-V)
+        vex-vm = mkHost {
+          hostname = "vex-vm";
+          variant = "vm";
+        };
       };
       
       # Development shells for working on this flake
