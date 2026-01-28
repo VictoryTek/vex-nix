@@ -68,10 +68,16 @@
           variant = "server";
         };
         
-        # Virtual Machine variant (auto-detects QEMU, VirtualBox, VMware, Hyper-V)
-        vex-vm = mkHost {
-          hostname = "vex-vm";
-          variant = "vm";
+        # Virtual Machine - QEMU/KVM variant (GNOME Boxes, virt-manager)
+        vex-vm-qemu = mkHost {
+          hostname = "vex-vm-qemu";
+          variant = "vm-qemu";
+        };
+        
+        # Virtual Machine - VirtualBox variant
+        vex-vm-vbox = mkHost {
+          hostname = "vex-vm-vbox";
+          variant = "vm-vbox";
         };
       };
       

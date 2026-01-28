@@ -44,7 +44,12 @@ sudo nixos-rebuild switch --flake .#vex-htpc --impure
   ```
 
 ### Virtual Machine Variants
-- **`vex-vm`** - Virtual Machine with auto-detected guest services
+- **`vex-vm-qemu`** - Virtual Machine for QEMU/KVM (GNOME Boxes, virt-manager)
   ```bash
-  sudo nixos-rebuild switch --flake .#vex-vm --impure
+  sudo nixos-rebuild switch --flake .#vex-vm-qemu --impure
+  ```
+
+- **`vex-vm-vbox`** - Virtual Machine for VirtualBox
+  ```bash
+  sudo nixos-rebuild switch --flake .#vex-vm-vbox --impure
   ```

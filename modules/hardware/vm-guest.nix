@@ -12,13 +12,13 @@
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;  # Clipboard sharing, dynamic resolution
 
-  # VirtualBox guest services
-  virtualisation.virtualbox.guest.enable = true;
-  virtualisation.virtualbox.guest.dragAndDrop = true;
+  # VirtualBox guest services - conditional on VirtualBox detection
+  virtualisation.virtualbox.guest.enable = lib.mkDefault true;
+  virtualisation.virtualbox.guest.dragAndDrop = lib.mkDefault true;
 
   # VMware guest services  
-  virtualisation.vmware.guest.enable = true;
+  virtualisation.vmware.guest.enable = lib.mkDefault true;
 
   # Hyper-V guest services
-  virtualisation.hypervGuest.enable = true;
+  virtualisation.hypervGuest.enable = lib.mkDefault true;
 }
