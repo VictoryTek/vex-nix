@@ -4,8 +4,9 @@
 {
   environment.systemPackages = with pkgs; [
     # Essential utilities
-    git
     curl
+    fastfetch
+    git
     wget
     unzip
     zip
