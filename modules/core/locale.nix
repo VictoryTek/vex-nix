@@ -3,7 +3,7 @@
 
 {
   # Timezone (override per-host if needed)
-  time.timeZone = lib.mkDefault "America/New_York";
+  time.timeZone = lib.mkDefault "America/Chicago";
   
   # Locale settings
   i18n = {

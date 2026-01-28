@@ -31,7 +31,7 @@
     gnome-clocks
     gnome-weather
     simple-scan                   # document scanner
-    gnome-extension-manager       # extensions app (using Extension Manager flatpak instead)
+    gnome-extensions-app          # default extensions app (using Extension Manager flatpak instead)
   ];
 
   # GNOME-specific packages
