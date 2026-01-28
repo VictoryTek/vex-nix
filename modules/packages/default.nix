@@ -3,6 +3,6 @@
 
 {
   imports = [
-    ./cli-tools.nix
+    ./common.nix
   ];
 }
