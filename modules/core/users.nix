@@ -2,23 +2,19 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Allow password changes to persist between rebuilds
+  # Mutable users allows passwords to persist in /etc/shadow
+  # (this is the default, but being explicit)
   users.mutableUsers = true;
 
-  # Default user - change password after first login with `passwd`
+  # Primary user - password is set via `passwd` command or during install
+  # No password is declared here so it won't be overwritten on rebuild
   users.users.nimda = {
     isNormalUser = true;
-    description = "Admin User";
     extraGroups = [ 
       "wheel"           # sudo access
       "networkmanager"  # network configuration
       "video"           # GPU access
       "audio"           # audio devices
     ];
-    # Initial password for first login (change it immediately!)
-    initialPassword = "changeme";
   };
-
-  # Ensure wheel group can use sudo
-  security.sudo.enable = true;
 }
