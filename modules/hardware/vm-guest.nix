@@ -8,9 +8,14 @@ let
   hypervisorFile = "/sys/class/dmi/id/sys_vendor";
   productFile = "/sys/class/dmi/id/product_name";
   
-  # Safely read file contents
+  # Safely read file contents, return empty string if file doesn't exist or is empty
   readFileOrEmpty = file: 
-    if builtins.pathExists file then lib.strings.trim (builtins.readFile file) else "";
+    let
+      content = if builtins.pathExists file 
+                then builtins.readFile file 
+                else "";
+    in
+      lib.strings.trim (lib.strings.sanitizeDerivationName content);
   
   sysVendor = readFileOrEmpty hypervisorFile;
   productName = readFileOrEmpty productFile;
