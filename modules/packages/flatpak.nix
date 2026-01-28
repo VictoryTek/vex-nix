@@ -4,20 +4,46 @@
 {
   # Enable Flatpak
   services.flatpak.enable = true;
-  
-  # Add Flathub repository on activation
-  # Note: This runs on each rebuild, but flatpak handles duplicates gracefully
-  system.activationScripts.flatpak-repo = ''
-    ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-  '';
-  
-  # Install Flatpak packages on activation
-  # Add Flatpak app IDs here (find them on flathub.org)
-  system.activationScripts.flatpak-install = ''
-    # Example: ${pkgs.flatpak}/bin/flatpak install -y flathub com.spotify.Client
-    
-    flatpak install -y flathub com.brave.Browser
-    flatpak install -y flathub app.zen_browser.zen
-    
-  '';
+
+  # Add Flathub repository
+  systemd.services.flatpak-repo = {
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.flatpak ];
+    script = ''
+      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
+
+  # List of Flatpak packages to install
+  systemd.services.flatpak-installer = {
+    wantedBy = [ "multi-user.target" ];
+    wants = [ "flatpak-repo.service" ];
+    after = [ "flatpak-repo.service" ];
+    path = [ pkgs.flatpak ];
+    script = ''
+      # Wait for remote to be ready
+      until flatpak remotes | grep -q flathub; do
+        echo "Waiting for flathub remote..."
+        sleep 2
+      done
+
+      # Install Flatpak applications
+      flatpak install -y flathub com.brave.Browser || true
+      flatpak install -y flathub app.zen_browser.zen || true
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
+
+  # Install required XDG desktop portals for Flatpak
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
 }
