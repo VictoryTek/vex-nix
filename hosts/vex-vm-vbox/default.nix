@@ -20,6 +20,9 @@
     
     # Flatpak support
     ../../modules/packages/flatpak.nix
+    
+    # System branding and customization
+    ../../modules/system/system.nix
   ];
 
   # VirtualBox VM settings

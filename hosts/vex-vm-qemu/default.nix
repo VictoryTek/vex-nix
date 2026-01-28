@@ -23,6 +23,9 @@
     
     # Flatpak support
     ../../modules/packages/flatpak.nix
+    
+    # System branding and customization
+    ../../modules/system/system.nix
   ];
 
   # QEMU VM settings

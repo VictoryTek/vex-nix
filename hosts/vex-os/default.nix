@@ -22,6 +22,9 @@
     # Flatpak support
     ../../modules/packages/flatpak.nix
     
+    # System branding and customization
+    ../../modules/system/system.nix
+    
     # GPU driver - uncomment the appropriate one:
     # ../../modules/hardware/nvidia.nix
     # ../../modules/hardware/amd.nix

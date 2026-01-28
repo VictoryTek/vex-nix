@@ -5,6 +5,7 @@
 {
   imports = [
     ./gnome.nix
+    ./gnome-extensions.nix
     ./audio.nix
     ./fonts.nix
   ];
