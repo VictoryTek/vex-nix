@@ -7,9 +7,12 @@
     
     # Unstable for bleeding-edge packages when needed
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    
+    # CachyOS kernel
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, chaotic, ... }@inputs:
     let
       # Supported systems
       supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -33,6 +36,9 @@
           inherit system;
           specialArgs = mkSpecialArgs system;
           modules = [
+            # CachyOS kernel module
+            chaotic.nixosModules.default
+            
             # Host-specific configuration
             ./hosts/${hostname}
             
