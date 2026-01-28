@@ -14,10 +14,24 @@
 
   # Exclude some default GNOME packages
   environment.gnome.excludePackages = with pkgs; [
+    gnome-photos
     gnome-tour
-    epiphany      # web browser
-    geary         # email client
+    cheese                        # webcam tool
     gnome-music
+    epiphany                      # web browser
+    geary                         # email reader
+    evince                        # document viewer
+    gnome-characters
+    totem                         # video player
+    tali                          # poker game
+    iagno                         # go game
+    hitori                        # sudoku game
+    atomix                        # puzzle game
+    gnome-maps
+    gnome-clocks
+    gnome-weather
+    simple-scan                   # document scanner
+    gnome-extension-manager       # extensions app (using Extension Manager flatpak instead)
   ];
 
   # GNOME-specific packages
