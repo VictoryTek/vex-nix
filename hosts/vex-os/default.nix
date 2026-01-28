@@ -31,6 +31,9 @@
   # Desktop-specific settings
   networking.hostName = "vex-os";
   
+  # Use CachyOS kernel for better performance
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  
   # Desktop packages
   environment.systemPackages = with pkgs; [
     # Browsers

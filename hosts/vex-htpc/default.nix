@@ -31,6 +31,9 @@
   # HTPC-specific settings
   networking.hostName = "vex-htpc";
   
+  # Use CachyOS kernel for better performance
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  
   # HTPC packages
   environment.systemPackages = with pkgs; [
     # Media players

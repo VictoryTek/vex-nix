@@ -20,6 +20,9 @@
   # Server-specific settings
   networking.hostName = "vex-svr";
   
+  # Use CachyOS kernel for better performance
+  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  
   # Disable NetworkManager on server, use systemd-networkd
   networking.networkmanager.enable = false;
   networking.useNetworkd = true;

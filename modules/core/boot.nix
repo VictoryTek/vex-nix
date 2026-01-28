@@ -33,6 +33,6 @@ in
     };
   };
 
-  # Use CachyOS kernel (optimized for performance)
-  boot.kernelPackages = pkgs.linuxPackages_cachyos;
+  # Use latest kernel by default (can be overridden per-host)
+  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 }
