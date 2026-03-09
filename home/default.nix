@@ -25,7 +25,7 @@
     fzf
     
     # System utilities
-    neofetch
+    fastfetch
     btop
     
     # Applications

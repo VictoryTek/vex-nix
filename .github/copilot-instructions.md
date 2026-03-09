@@ -201,17 +201,29 @@ Every user request MUST follow this workflow:
 │   • npm run preflight                                       │
 │   • cargo preflight                                         │
 │                                                             │
-│ Step 2: If preflight EXISTS                                 │
-│   • Execute script                                          │
-│   • Capture exit code + full output                         │
-│   • Exit code 0 REQUIRED                                    │
+│ Step 2: Detect CI/CD workflows                              │
+│   • GitHub Actions: .github/workflows/*.yml                 │
+│   • GitLab CI: .gitlab-ci.yml                               │
 │                                                             │
-│ Step 3: If preflight DOES NOT EXIST                         │
-│   • Spawn Research subagent to design minimal preflight     │
-│   • Spawn Implementation subagent to create it              │
-│   • Re-run Phase 6                                          │
+│ Step 3: If GitHub Actions exists but GitLab CI does not     │
+│   • Spawn Research subagent to analyze GitHub workflow      │
+│   • Design equivalent GitLab CI workflow preserving:        │
+│       - Build commands                                      │
+│       - Test commands                                       │
+│       - Environment variables                               │
+│       - Dependency caching                                  │
+│       - Pre/post job steps                                  │
+│   • Document spec at:                                       │
+│     .github/docs/subagent_docs/[FEATURE_NAME]_gitlab_workflow_spec.md │
+│   • Spawn Implementation subagent to generate .gitlab-ci.yml │
+│   • Include GitLab workflow in modified file paths          │
 │                                                             │
-│ Enforcement defined by project script (CI-aligned)          │
+│ Step 4: Execute preflight validations                       │
+│   • Run preflight script if exists                          │
+│   • Simulate GitHub Actions workflow locally or dry-run     │
+│   • Lint/check GitLab CI pipeline                           │
+│   • Treat failures or missing workflow conversions as CRITICAL │
+│     → triggers Phase 4 refinement                           │
 └──────────────────────────┬──────────────────────────────────┘
                            ↓
                   ┌────────┴────────────┐
@@ -478,7 +490,9 @@ Return:
 # PHASE 6: PREFLIGHT VALIDATION (FINAL GATE)
 
 Purpose:
-Validate against ALL CI/CD enforcement standards before completion.
+Validate against ALL CI/CD enforcement standards before completion,
+including project-level preflight scripts and CI/CD workflow integrity
+for both GitHub Actions and GitLab CI pipelines.
 
 REQUIRED after:
 - Phase 3 returns PASS, OR
