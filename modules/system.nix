@@ -46,8 +46,6 @@
         "guest account" = "nobody";
         "map to guest" = "bad user";
       };
-    };
-    shares = {
       public = {
         path = "/home/vex/Public";
         browseable = "yes";

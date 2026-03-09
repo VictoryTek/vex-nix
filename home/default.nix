@@ -35,9 +35,9 @@
   # Git configuration
   programs.git = {
     enable = true;
-    userName = "Vex";
-    userEmail = "vex@example.com";  # Change this
-    extraConfig = {
+    settings = {
+      user.name = "Vex";
+      user.email = "vex@example.com";  # Change this
       init.defaultBranch = "main";
       pull.rebase = false;
     };
