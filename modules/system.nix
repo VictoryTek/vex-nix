@@ -34,18 +34,19 @@
   # Enable Samba for file sharing
   services.samba = {
     enable = true;
-    securityType = "user";
     openFirewall = true;
-    extraConfig = ''
-      workgroup = WORKGROUP
-      server string = VexOS Samba Server
-      netbios name = vexos
-      security = user
-      hosts allow = 192.168. 127.0.0.1 localhost
-      hosts deny = 0.0.0.0/0
-      guest account = nobody
-      map to guest = bad user
-    '';
+    settings = {
+      global = {
+        workgroup = "WORKGROUP";
+        "server string" = "VexOS Samba Server";
+        "netbios name" = "vexos";
+        security = "user";
+        "hosts allow" = "192.168. 127.0.0.1 localhost";
+        "hosts deny" = "0.0.0.0/0";
+        "guest account" = "nobody";
+        "map to guest" = "bad user";
+      };
+    };
     shares = {
       public = {
         path = "/home/vex/Public";
