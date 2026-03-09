@@ -8,7 +8,7 @@ From a fresh NixOS install:
 
 1. **Clone this repository**
    ```bash
-   git clone https://github.com/yourusername/vex-nix.git
+   git clone https://github.com/VictoryTek/vex-nix.git
    cd vex-nix
    ```
 

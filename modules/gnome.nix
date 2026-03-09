@@ -19,8 +19,8 @@
 
   # GNOME-specific packages
   environment.systemPackages = with pkgs; [
-    gnome.gnome-tweaks
-    gnome.dconf-editor
+    gnome-tweaks
+    dconf-editor
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
   ];
@@ -28,8 +28,8 @@
   # Exclude some default GNOME packages (optional)
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
-    gnome.epiphany  # GNOME Web browser
-    gnome.geary     # Email client
+    epiphany  # GNOME Web browser
+    geary     # Email client
     # Add more packages to exclude if desired
   ];
 
