@@ -19,6 +19,9 @@
     # Browsers
     brave
 
+    # Terminal emulators
+    ghostty
+
     # Terminal utilities
     tree
     ripgrep
@@ -26,13 +29,14 @@
     bat
     eza
     fzf
-    
+    tmux
+
     # System utilities
     fastfetch
     btop
-    
-    # Applications
-    # Add your preferred applications here
+    inxi
+    pavucontrol
+    blivet-gui
   ];
 
   # Git configuration
@@ -64,6 +68,12 @@
       sshstatus = "systemctl status sshd";
       smbstatus = "systemctl status smbd";
     };
+  };
+
+  # Starship cross-shell prompt
+  programs.starship = {
+    enable = true;
+    enableBashIntegration = true;
   };
 
   # Let Home Manager manage itself

@@ -40,6 +40,13 @@
     gnome-user-docs
     yelp               # GNOME Help
     epiphany           # GNOME Web browser
+
+    # Additional exclusions
+    gnome-extensions-app   # GNOME Extensions management app
+    xterm                  # Legacy X11 terminal
+    geary                  # GNOME email client
+    gnome-music            # GNOME music player
+    rhythmbox              # Alternative music player
   ];
 
   # Enable GNOME keyring

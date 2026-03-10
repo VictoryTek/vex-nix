@@ -248,50 +248,63 @@ Every user request MUST follow this workflow:
 │ PHASE 7: COMMIT MESSAGE & DELIVERY                          │
 │ Orchestrator prepares final Git commit information          │
 │                                                             │
+│ Preconditions:                                              │
+│ • Phase 6 Preflight PASSED                                  │
+│ • All reviews APPROVED                                      │
+│                                                             │
 │ Tasks:                                                      │
-│ • Aggregate all modified file paths from implementation     │
+│ • Aggregate ALL modified file paths from implementation     │
 │   and refinement phases                                     │
-│ • Generate a concise commit message                         │
+│ • Generate a Git commit message                             │
 │ • Provide a short description explaining the change         │
 │                                                             │
-│ Commit Format:                                              │
+│ STRICT OUTPUT RULES                                         │
 │                                                             │
-│ <one-line summary>                                          │
+│ The output MUST follow the EXACT structure below.           │
 │                                                             │
-│ <description explaining what changed and why>               │
+│ DO NOT include:                                             │
+│ • "Commit Message" headings                                 │
+│ • "Edited" summaries                                        │
+│ • diff statistics ( +32 -0 )                                │
+│ • explanations outside the template                         │
 │                                                             │
-│ Rules:                                                      │
-│ • First line MUST be a single concise summary               │
-│ • Maximum 72 characters preferred                           │
-│ • Description should explain the purpose and impact         │
-│ • Avoid bullet-point lists                                  │
+│ The FIRST LINE MUST be a one-line commit summary.           │
 │                                                             │
-│ Output Structure:                                           │
+│ The SECOND SECTION MUST be a paragraph explaining:          │
+│ • what changed                                              │
+│ • why the change was made                                   │
 │                                                             │
-│ ## Commit Message                                           │
+│ The THIRD SECTION MUST list modified files.                 │
 │                                                             │
-│ <one-line summary>                                          │
+│ EXACT REQUIRED FORMAT                                       │
 │                                                             │
-│ <description paragraph explaining the change>               │
+│ <ONE LINE COMMIT SUMMARY – MAX 72 CHARACTERS>               │
 │                                                             │
-│ ## Modified Files                                           │
+│ <DESCRIPTION PARAGRAPH EXPLAINING WHAT CHANGED AND WHY>     │
+│                                                             │
+│ Modified Files:                                             │
 │ - path/to/file1                                             │
 │ - path/to/file2                                             │
 │ - path/to/file3                                             │
 │                                                             │
-│ ## Validation                                               │
+│ VALIDATION CHECKS                                           │
+│                                                             │
 │ ✔ Build successful                                          │
 │ ✔ Tests passed                                              │
 │ ✔ Review approved                                           │
 │ ✔ Preflight passed                                          │
 │                                                             │
-│ Output must be ready to copy into `git commit`.             │
+│ The output must be ready to paste directly into:            │
+│                                                             │
+│ git commit                                                  │
 └──────────────────────────┬──────────────────────────────────┘
                            ↓
 ┌─────────────────────────────────────────────────────────────┐
 │ ORCHESTRATOR: Report completion to user                     │
+│                                                             │
 │ "All checks passed. Code is ready to push to GitHub."       │
 └─────────────────────────────────────────────────────────────┘
+
 ---
 
 # Subagent Tool Usage
@@ -578,47 +591,16 @@ The project's preflight script defines them.
 
 "All checks passed. Code is ready to push to GitHub."
 
-- Transition to Phase 7
+- Transition to **Phase 7: Commit Message & Delivery**
 
 Spawn Commit Message generation.
 
-The Orchestrator MUST generate a Git commit message using the EXACT template below.
+The Orchestrator MUST generate the commit message **according to the
+Phase 7 specification exactly as defined in the workflow section above.**
 
-The output MUST contain ONLY the following structure:
-
-```
-<ONE LINE COMMIT SUMMARY>
-
-<DESCRIPTION PARAGRAPH EXPLAINING THE CHANGE>
-
-Modified Files:
-- file/path/one
-- file/path/two
-- file/path/three
-```
-
-Strict Rules:
-
-1. The FIRST line MUST be a **single concise commit summary**.
-2. The summary MUST describe the change in one sentence.
-3. The summary MUST be **under 72 characters**.
-4. The SECOND section MUST be a **paragraph describing the change and purpose**.
-5. The THIRD section MUST list all modified files from previous phases.
-
-The output MUST NOT contain:
-
-- "Commit Message" headings
-- "Validation" sections
-- build/test/preflight results
-- grading tables
-- review results
-- extra commentary
-- extra sections
-- bullet summaries
-
-If the output does not follow the template exactly, regenerate it until it does.
-
-The result must be clean and copy-paste ready for `git commit`.
+No additional formatting rules should be defined here.
+All commit message formatting, structure, and validation requirements
+are controlled exclusively by **Phase 7**.
 
 ---
 

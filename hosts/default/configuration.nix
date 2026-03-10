@@ -6,6 +6,8 @@
     ../../modules/gnome.nix
     ../../modules/users.nix
     ../../modules/gpu.nix
+    ../../modules/gaming.nix
+    ../../modules/asus.nix
   ];
 
   # GPU driver selection — set to "nvidia", "amd", "intel", or "none"
@@ -54,7 +56,6 @@
 
   # System packages
   environment.systemPackages = with pkgs; [
-    vim
     wget
     git
     curl

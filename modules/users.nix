@@ -12,6 +12,7 @@
       "video"
       "docker"
       "libvirtd"
+      "gamemode"
     ];
     
     # Set shell (optional)
