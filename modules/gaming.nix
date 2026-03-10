@@ -1,18 +1,38 @@
 # modules/gaming.nix
 #
-# Gaming support module: Steam, GameMode, and kernel tweaks.
+# Gaming support module: Steam, GameMode, nix-gaming enhancements.
+# nix-gaming modules (pipewireLowLatency, platformOptimizations) are
+# imported in flake.nix and configured below.
+# Provides: proton-ge-bin (GE-Proton as Steam compat tool),
+#           nix-gaming Cachix binary cache.
+#
 # Note: Requires gpu.type to be set (nvidia/amd/intel) in configuration.nix
 # for Steam and games to function properly.
+# Note: pipewireLowLatency requires services.pipewire.enable = true
+#       (set in hosts/default/configuration.nix).
 
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
+  # ── Cachix binary cache (avoids building wine-ge from source) ─────────
+  nix.settings = {
+    extra-substituters = [ "https://nix-gaming.cachix.org" ];
+    extra-trusted-public-keys = [
+      "nix-gaming.cachix.org-1:nbjlureqMbRAxR1gJ/f3hxemL9svXaZF/Ees8vCUUs4="
+    ];
+  };
+
   # ── Steam ────────────────────────────────────────────────────────────
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = false;
     localNetworkGameTransfers.openFirewall = true;
+
+    # GE-Proton: custom Proton fork with extra patches for better
+    # game compatibility (codecs, anti-cheat, FSR, DLSS, Wayland, etc.)
+    # Replaces the deprecated proton-ge package from nix-gaming.
+    extraCompatPackages = [ pkgs.proton-ge-bin ];
   };
 
   # ── GameMode (Feral Interactive) ──────────────────────────────────────
@@ -30,12 +50,13 @@
     };
   };
 
-  # ── Gaming Kernel Tweaks (Bazzite-inspired) ──────────────────────────
-  # Increase vm.max_map_count for games that need many memory mappings
-  # (required by many modern games, Star Citizen, etc.)
-  boot.kernel.sysctl = {
-    "vm.max_map_count" = 2147483642;
-    # Split lock performance (avoid performance penalty from split locks)
-    "kernel.split_lock_mitigate" = 0;
+  # ── PipeWire Low Latency ─────────────────────────────────────────────
+  # Extends the PipeWire configuration in configuration.nix.
+  # Theoretical latency: quantum/rate = 64/48000 ≈ 1.33ms
+  # If audio cuts out, increase quantum to 128 or 256.
+  services.pipewire.lowLatency = {
+    enable = true;
+    quantum = 64;
+    rate = 48000;
   };
 }

@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   # Home Manager configuration for user-specific settings
@@ -31,12 +31,20 @@
     fzf
     tmux
 
+    # Themes
+    bibata-cursors
+    kora-icon-theme
+
     # System utilities
     fastfetch
     btop
     inxi
     pavucontrol
     blivet-gui
+
+    # Wine (GE build) — for running non-Steam Windows games
+    # wine-ge includes Esync/Fsync, FSR, media codecs, and gaming patches
+    inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.wine-ge
   ];
 
   # Git configuration
@@ -74,6 +82,28 @@
   programs.starship = {
     enable = true;
     enableBashIntegration = true;
+  };
+
+  # Cursor theme (applies to both X11 and Wayland)
+  home.pointerCursor = {
+    gtk.enable = true;
+    name = "Bibata-Modern-Classic";
+    package = pkgs.bibata-cursors;
+    size = 24;
+  };
+
+  # GTK icon and cursor theme
+  gtk = {
+    enable = true;
+    iconTheme = {
+      name = "Kora";
+      package = pkgs.kora-icon-theme;
+    };
+    cursorTheme = {
+      name = "Bibata-Modern-Classic";
+      package = pkgs.bibata-cursors;
+      size = 24;
+    };
   };
 
   # Let Home Manager manage itself
