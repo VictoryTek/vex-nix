@@ -6,18 +6,23 @@ A modular NixOS configuration with GNOME, flakes, SSH, Samba, and Tailscale.
 
 From a fresh NixOS install:
 
-1. **Clone this repository**
+1. **Install git via shell environment**
+   ```bash
+   nix-shell -p git
+   ```
+
+2. **Clone this repository**
    ```bash
    git clone https://github.com/VictoryTek/vex-nix.git
    cd vex-nix
    ```
 
-2. **Generate hardware configuration**
+3. **Generate hardware configuration**
    ```bash
    sudo nixos-generate-config --show-hardware-config > hosts/default/hardware-configuration.nix
    ```
 
-3. **Customize for your system**
+4. **Customize for your system**
    
    Edit these files:
    - `modules/users.nix` - Change username from "nimda"
@@ -25,12 +30,12 @@ From a fresh NixOS install:
    - `home/default.nix` - Update username and git config
    - `flake.nix` - Change hostname if not "vexos"
 
-4. **Build and switch**
+5. **Build and switch**
    ```bash
    sudo nixos-rebuild switch --flake .#vexos
    ```
 
-5. **Reboot and log in**
+6. **Reboot and log in**
 
 ## Automated Deployment
 
