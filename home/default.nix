@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, ... }:
 
 {
   # Home Manager configuration for user-specific settings
@@ -41,10 +41,6 @@
     inxi
     pavucontrol
     blivet-gui
-
-    # Wine (GE build) — for running non-Steam Windows games
-    # wine-ge includes Esync/Fsync, FSR, media codecs, and gaming patches
-    inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system}.wine-ge
   ];
 
   # Git configuration
