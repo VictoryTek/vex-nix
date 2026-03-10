@@ -5,7 +5,11 @@
     ../../modules/system.nix
     ../../modules/gnome.nix
     ../../modules/users.nix
+    ../../modules/gpu.nix
   ];
+
+  # GPU driver selection — set to "nvidia", "amd", "intel", or "none"
+  gpu.type = "none";
 
   # Hostname
   networking.hostName = "vexos";
