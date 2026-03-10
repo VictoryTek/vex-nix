@@ -4,8 +4,8 @@
   # Home Manager configuration for user-specific settings
   # This is managed by Home Manager and controls user environment
 
-  home.username = "vex";
-  home.homeDirectory = "/home/vex";
+  home.username = "nimda";
+  home.homeDirectory = "/home/nimda";
 
   # This value determines the Home Manager release which the
   # configuration is compatible with.
@@ -15,7 +15,10 @@
   home.packages = with pkgs; [
     # Development tools
     vscode
-    
+
+    # Browsers
+    brave
+
     # Terminal utilities
     tree
     ripgrep
@@ -33,15 +36,15 @@
   ];
 
   # Git configuration
-  programs.git = {
-    enable = true;
-    settings = {
-      user.name = "Vex";
-      user.email = "vex@example.com";  # Change this
-      init.defaultBranch = "main";
-      pull.rebase = false;
-    };
-  };
+  #programs.git = {
+  #  enable = true;
+  #  settings = {
+  #    user.name = "Nimda";
+  #    user.email = "vex@example.com";  # Change this
+  #    init.defaultBranch = "main";
+  #    pull.rebase = false;
+  #  };
+  #};
 
   # Bash configuration
   programs.bash = {
@@ -49,8 +52,8 @@
     shellAliases = {
       ll = "ls -la";
       ".." = "cd ..";
-      update = "sudo nixos-rebuild switch --flake /home/vex/Projects/vex-nix#vexos";
-      rebuild = "sudo nixos-rebuild switch --flake /home/vex/Projects/vex-nix#vexos";
+      update = "sudo nixos-rebuild switch --flake /home/nimda/Projects/vex-nix#vexos";
+      rebuild = "sudo nixos-rebuild switch --flake /home/nimda/Projects/vex-nix#vexos";
       
       # Tailscale shortcuts
       ts = "tailscale";

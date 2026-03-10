@@ -47,7 +47,7 @@
         "map to guest" = "bad user";
       };
       public = {
-        path = "/home/vex/Public";
+        path = "/home/nimda/Public";
         browseable = "yes";
         "read only" = "no";
         "guest ok" = "no";
@@ -81,4 +81,8 @@
 
   # Power management
   services.power-profiles-daemon.enable = true;
+
+  # Docker
+  virtualisation.docker.enable = true;
+  virtualisation.docker.enableOnBoot = true;
 }

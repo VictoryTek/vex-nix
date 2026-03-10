@@ -23,7 +23,11 @@
     dconf-editor
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
+    gnome-boxes
   ];
+
+  # Virtualisation backend for GNOME Boxes
+  virtualisation.libvirtd.enable = true;
 
   # Exclude some default GNOME packages (optional)
   environment.gnome.excludePackages = with pkgs; [

@@ -20,7 +20,7 @@ From a fresh NixOS install:
 3. **Customize for your system**
    
    Edit these files:
-   - `modules/users.nix` - Change username from "vex"
+   - `modules/users.nix` - Change username from "nimda"
    - `hosts/default/configuration.nix` - Update timezone and locale
    - `home/default.nix` - Update username and git config
    - `flake.nix` - Change hostname if not "vexos"
@@ -44,7 +44,7 @@ From a fresh NixOS install:
 
 ```bash
 # Set Samba password
-sudo smbpasswd -a vex
+sudo smbpasswd -a nimda
 
 # Connect to Tailscale
 sudo tailscale up

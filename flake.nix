@@ -26,7 +26,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.vex = import ./home/default.nix;
+            home-manager.users.nimda = import ./home/default.nix;
           }
         ];
       };

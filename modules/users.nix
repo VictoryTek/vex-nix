@@ -2,14 +2,16 @@
 
 {
   # Define user accounts
-  users.users.vex = {
+  users.users.nimda = {
     isNormalUser = true;
-    description = "Vex";
+    description = "Nimda";
     extraGroups = [ 
       "networkmanager" 
       "wheel"          # Enable sudo
       "audio"
       "video"
+      "docker"
+      "libvirtd"
     ];
     
     # Set shell (optional)
