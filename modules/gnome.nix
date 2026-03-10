@@ -42,6 +42,8 @@
     epiphany           # GNOME Web browser
 
     # Additional exclusions
+    # TODO: Exclude GNOME Extensions manager app once correct nixpkgs attribute is identified
+    # (gnome-extensions-app and gnome-shell-extensions are both wrong for this nixpkgs revision)
     xterm                  # Legacy X11 terminal
     geary                  # GNOME email client
     gnome-music            # GNOME music player
