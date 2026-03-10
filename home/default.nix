@@ -88,17 +88,17 @@
     size = 24;
   };
 
-  # GTK icon and cursor theme
-  gtk = {
-    enable = true;
-    iconTheme = {
-      name = "Kora";
-      package = pkgs.kora-icon-theme;
-    };
-    cursorTheme = {
-      name = "Bibata-Modern-Classic";
-      package = pkgs.bibata-cursors;
-      size = 24;
+  # GTK theming — enable = true writes gtk-3/4 config files for non-GNOME apps.
+  # Icon and cursor theme are set via dconf.settings below (what GNOME actually reads).
+  gtk.enable = true;
+
+  # Explicit dconf overrides so GNOME picks up the correct theme names.
+  # (GNOME reads icon/cursor theme from dconf, not just GTK config files.)
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      icon-theme = "Kora";
+      cursor-theme = "Bibata-Modern-Classic";
+      cursor-size = 24;
     };
   };
 

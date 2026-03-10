@@ -37,6 +37,7 @@ OPT_YES=false
 OPT_REGEN=false
 OPT_KEEP=false
 OPT_DRYRUN=false
+OPT_REBOOT=false
 
 usage() {
     cat <<'EOF'
@@ -49,12 +50,13 @@ Options:
       --regen-hardware Force regenerate hardware-configuration.nix
       --keep-hardware  Force keep existing hardware-configuration.nix
       --dry-run        Print what would happen; make no changes
+  -r, --reboot         Reboot automatically after a successful deploy
   -h, --help           Show this help and exit
 
 Examples:
   sudo bash scripts/deploy.sh
   sudo bash scripts/deploy.sh --yes --keep-hardware
-  sudo bash scripts/deploy.sh --yes --regen-hardware
+  sudo bash scripts/deploy.sh --yes --regen-hardware --reboot
   bash scripts/deploy.sh --dry-run
 EOF
 }
@@ -65,6 +67,7 @@ while [[ $# -gt 0 ]]; do
         --regen-hardware)  OPT_REGEN=true ;;
         --keep-hardware)   OPT_KEEP=true ;;
         --dry-run)         OPT_DRYRUN=true ;;
+        -r|--reboot)       OPT_REBOOT=true ;;
         -h|--help)         usage; exit 0 ;;
         *)
             fail "Unknown option: $1"
@@ -348,6 +351,26 @@ if [[ "$ERRORS" -eq 0 ]]; then
         echo -e "${GREEN}  DEPLOY PASSED — system is up to date  ${NC}"
     fi
     echo -e "${GREEN}=========================================${NC}"
+
+    # ── Reboot prompt ──────────────────────────────────────────────────────
+    if [[ "$OPT_DRYRUN" == "false" ]]; then
+        if [[ "$OPT_REBOOT" == "true" ]]; then
+            echo ""
+            echo -e "${YELLOW}Rebooting now (--reboot flag set)...${NC}"
+            reboot
+        elif [[ "$OPT_YES" == "false" ]]; then
+            echo ""
+            printf "  Reboot now to apply all changes? [y/N] "
+            read -r REBOOT_REPLY
+            if [[ "$REBOOT_REPLY" =~ ^[Yy]$ ]]; then
+                echo -e "${YELLOW}Rebooting...${NC}"
+                reboot
+            else
+                info "Reboot skipped. Some changes (e.g. kernel, ASUS/GPU modules) require a reboot to take effect."
+            fi
+        fi
+    fi
+
     exit 0
 else
     echo -e "${RED}=========================================${NC}"
