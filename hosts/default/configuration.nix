@@ -25,9 +25,9 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Bootloader (legacy BIOS/MBR)
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda";
 
   # Networking
   networking.networkmanager.enable = true;
