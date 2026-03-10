@@ -27,10 +27,15 @@
 
   # Exclude some default GNOME packages (optional)
   environment.gnome.excludePackages = with pkgs; [
+    gnome-weather
+    gnome-clocks
+    gnome-maps
+    simple-scan        # Document scanner
+    gnome-characters
     gnome-tour
-    epiphany  # GNOME Web browser
-    geary     # Email client
-    # Add more packages to exclude if desired
+    gnome-user-docs
+    yelp               # GNOME Help
+    epiphany           # GNOME Web browser
   ];
 
   # Enable GNOME keyring
