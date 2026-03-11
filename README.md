@@ -8,7 +8,12 @@ A modular NixOS configuration with GNOME, flakes, SSH, Samba, and Tailscale.
 
 From the NixOS live installer environment:
 
-1. **Bootstrap the VexOS thin flake**
+1. **Install git** (required by the bootstrap script)
+   ```bash
+   nix-shell -p git
+   ```
+
+2. **Bootstrap the VexOS thin flake**
    ```bash
    curl -sL https://raw.githubusercontent.com/VictoryTek/vex-nix/main/scripts/install.sh | sudo bash
    ```
