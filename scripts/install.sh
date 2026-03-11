@@ -223,10 +223,7 @@ step "Step 7: nix flake update (generates flake.lock)"
 info "This fetches the latest VexOS revision from GitHub."
 info "It may take a minute on first run."
 
-run nix \
-    --extra-experimental-features 'nix-command flakes' \
-    flake update \
-    /etc/nixos
+run sh -c "cd /etc/nixos && nix --extra-experimental-features 'nix-command flakes' flake update"
 
 if [[ "$OPT_DRYRUN" == "false" ]]; then
     pass "flake.lock generated"
