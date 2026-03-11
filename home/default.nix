@@ -35,6 +35,12 @@
     bibata-cursors
     kora-icon-theme
 
+    # Virtualization
+    virt-manager
+
+    # Communication
+    discord
+
     # System utilities
     fastfetch
     btop
@@ -116,6 +122,28 @@
   # Explicit dconf overrides so GNOME picks up the correct theme names.
   # (GNOME reads icon/cursor theme from dconf, not just GTK config files.)
   dconf.settings = {
+    "org/gnome/shell" = {
+      enabled-extensions = [
+        "appindicatorsupport@rgcjonas.gmail.com"
+        "dash-to-dock@micxgx.gmail.com"
+        "AlphabeticalAppGrid@stuarthayhurst"
+        "gamemode@dhaubenschild.de"
+        "gnome-ui-tune@itstime.tech"
+        "nothing-to-say@joelkl.eu"
+        "steal-my-focus-window@b00f.github.io"
+        "tailscale-status@maxgallup.github.com"
+      ];
+      favorite-apps = [
+        "com.brave.Browser.desktop"
+        "org.gnome.Nautilus.desktop"
+        "com.mitchellh.ghostty.desktop"
+        "system-update.desktop"
+        "org.gnome.Boxes.desktop"
+        "virt-manager.desktop"
+        "code.desktop"
+        "com.discordapp.Discord.desktop"
+      ];
+    };
     "org/gnome/desktop/interface" = {
       icon-theme = "kora";
       cursor-theme = "Bibata-Modern-Classic";

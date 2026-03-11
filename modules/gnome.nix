@@ -24,6 +24,12 @@
     dconf-editor
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
+    gnomeExtensions.alphabetical-app-grid
+    gnomeExtensions.gamemode
+    gnomeExtensions.gnome-4x-ui-improvements
+    gnomeExtensions.nothing-to-say
+    gnomeExtensions.steal-my-focus-window
+    gnomeExtensions.tailscale-status
     gnome-boxes
   ];
 
