@@ -24,6 +24,9 @@
   # the evaluator + linker from exhausting memory on machines with ≤8 GB RAM.
   nix.settings.max-jobs = 2;
   nix.settings.cores = 2;
+  # Increase download buffer to avoid "buffer is full" warnings when
+  # downloads outpace store writes (common in VMs with slow virtual disks).
+  nix.settings.download-buffer-size = 268435456; # 256 MiB
 
   # zram swap — creates a compressed in-RAM swap device (default: half of RAM).
   # This gives the kernel headroom to swap build artefacts out of physical RAM
