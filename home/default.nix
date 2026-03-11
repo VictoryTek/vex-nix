@@ -119,6 +119,12 @@
     size = 24;
   };
 
+  # Wallpapers — copied from the repo into ~/Pictures/Wallpapers/ at activation.
+  # JXL format requires a gdk-pixbuf loader; if wallpapers don't appear,
+  # add jxl-pixbuf-loader (or equivalent) to modules/gnome.nix environment.systemPackages.
+  home.file."Pictures/Wallpapers/vex-bb-light.jxl".source = ../wallpapers/vex-bb-light.jxl;
+  home.file."Pictures/Wallpapers/vex-bb-dark.jxl".source  = ../wallpapers/vex-bb-dark.jxl;
+
   # Explicit dconf overrides so GNOME picks up the correct theme names.
   # (GNOME reads icon/cursor theme from dconf, not just GTK config files.)
   dconf.settings = {
@@ -148,6 +154,11 @@
       icon-theme = "kora";
       cursor-theme = "Bibata-Modern-Classic";
       cursor-size = 24;
+    };
+    "org/gnome/desktop/background" = {
+      picture-uri      = "file://${config.home.homeDirectory}/Pictures/Wallpapers/vex-bb-light.jxl";
+      picture-uri-dark = "file://${config.home.homeDirectory}/Pictures/Wallpapers/vex-bb-dark.jxl";
+      picture-options  = "zoom";
     };
   };
 
