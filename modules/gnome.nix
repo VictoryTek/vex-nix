@@ -25,7 +25,7 @@
     gnomeExtensions.appindicator
     gnomeExtensions.dash-to-dock
     gnomeExtensions.alphabetical-app-grid
-    gnomeExtensions.gamemode
+    gnomeExtensions.gamemode-shell-extension
     gnomeExtensions.gnome-4x-ui-improvements
     gnomeExtensions.nothing-to-say
     gnomeExtensions.steal-my-focus-window
