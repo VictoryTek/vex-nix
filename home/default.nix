@@ -74,26 +74,43 @@
     };
   };
 
+  # Wayland session environment variables.
+  # NIXOS_OZONE_WL forces Electron apps (VS Code, etc.) to use the Wayland backend.
+  # MOZ_ENABLE_WAYLAND forces Firefox to use the Wayland backend.
+  # QT_QPA_PLATFORM ensures Qt apps prefer Wayland with XCB as fallback.
+  home.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    MOZ_ENABLE_WAYLAND = "1";
+    QT_QPA_PLATFORM = "wayland;xcb";
+  };
+
   # Starship cross-shell prompt
   programs.starship = {
     enable = true;
     enableBashIntegration = true;
   };
 
-  # Cursor theme (applies to both X11 and Wayland)
+  # Cursor theme for X11 and Wayland cursor rendering (env vars, xcursor, .icons/default).
+  # gtk.enable is intentionally omitted here — cursor theme for GTK is handled below
+  # to avoid activation-script conflicts that cause the icon theme to revert after reboot.
   home.pointerCursor = {
-    gtk.enable = true;
     name = "Bibata-Modern-Classic";
     package = pkgs.bibata-cursors;
     size = 24;
   };
 
-  # GTK theming — enable = true writes gtk-3/4 config files for non-GNOME apps.
-  # Icon and cursor theme are set via dconf.settings below (what GNOME actually reads).
+  # GTK theming — writes gtk-3/4 config files for non-GNOME apps.
+  # Declaring both iconTheme and cursorTheme here in one place prevents conflicts
+  # between Home Manager's pointer-cursor activation scripts and dconf settings.
   gtk.enable = true;
   gtk.iconTheme = {
     name = "Kora";
     package = pkgs.kora-icon-theme;
+  };
+  gtk.cursorTheme = {
+    name = "Bibata-Modern-Classic";
+    package = pkgs.bibata-cursors;
+    size = 24;
   };
 
   # Explicit dconf overrides so GNOME picks up the correct theme names.

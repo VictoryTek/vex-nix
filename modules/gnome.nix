@@ -1,11 +1,12 @@
 { config, pkgs, ... }:
 
 {
-  # Enable the X11 windowing system
+  # Enable the X11 windowing system (still required for XKB keyboard config and XWayland)
   services.xserver.enable = true;
 
-  # Enable the GNOME Desktop Environment
+  # Enable the GNOME Desktop Environment with Wayland enforced
   services.displayManager.gdm.enable = true;
+  services.displayManager.gdm.wayland = true;
   services.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
