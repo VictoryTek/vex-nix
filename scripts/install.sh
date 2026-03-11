@@ -162,7 +162,7 @@ if [[ -f "$FLAKE_PATH" ]]; then
     else
         echo ""
         printf "  Overwrite existing /etc/nixos/flake.nix? [y/N] "
-        read -r REPLY
+        read -r REPLY </dev/tty
         if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
             warn "Aborted by user."
             exit 0
