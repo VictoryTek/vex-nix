@@ -8,15 +8,9 @@ A modular NixOS configuration with GNOME, flakes, SSH, Samba, and Tailscale.
 
 From the NixOS live installer environment:
 
-1. **Partition and mount your disks, then generate hardware configuration**
+1. **Bootstrap the VexOS thin flake**
    ```bash
-   sudo nixos-generate-config
-   ```
-   This writes `/etc/nixos/hardware-configuration.nix` for your machine.
-
-2. **Bootstrap the VexOS thin flake**
-   ```bash
-   curl -sL https://raw.githubusercontent.com/VexTrex87/vex-nix/main/scripts/install.sh | sudo bash
+   curl -sL https://raw.githubusercontent.com/VictoryTek/vex-nix/main/scripts/install.sh | sudo bash
    ```
    This writes a minimal `/etc/nixos/flake.nix`, initialises `/etc/nixos/` as a
    git repository (required for pure flake evaluation), and generates `flake.lock`.
@@ -58,7 +52,7 @@ rebuild  # runs: nixos-rebuild switch (no upstream update)
 | `/etc/nixos/flake.nix` | Thin consumer flake — points to GitHub repo |
 | `/etc/nixos/flake.lock` | Pinned revision of all upstream flake inputs |
 | `/etc/nixos/hardware-configuration.nix` | This machine only — never in the GitHub repo |
-| `github:VexTrex87/vex-nix` | All system config, modules, and home config |
+| `github:VictoryTek/vex-nix` | All system config, modules, and home config |
 
 ---
 
@@ -71,7 +65,7 @@ sudo tee /etc/nixos/flake.nix > /dev/null <<'EOF'
 {
   description = "VexOS local machine flake";
 
-  inputs.vexos.url = "github:VexTrex87/vex-nix";
+  inputs.vexos.url = "github:VictoryTek/vex-nix";
 
   outputs = { self, vexos }: {
     nixosConfigurations.vexos = vexos.lib.mkVexosSystem {
