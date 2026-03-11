@@ -4,82 +4,93 @@ A modular NixOS configuration with GNOME, flakes, SSH, Samba, and Tailscale.
 
 ## Installation
 
-From a fresh NixOS install:
+### Fresh Install (New Machine)
 
-1. **Install git via shell environment**
+From the NixOS live installer environment:
+
+1. **Partition and mount your disks, then generate hardware configuration**
    ```bash
-   nix-shell -p git
+   sudo nixos-generate-config
+   ```
+   This writes `/etc/nixos/hardware-configuration.nix` for your machine.
+
+2. **Bootstrap the VexOS thin flake**
+   ```bash
+   curl -sL https://raw.githubusercontent.com/VexTrex87/vex-nix/main/scripts/install.sh | sudo bash
+   ```
+   This writes a minimal `/etc/nixos/flake.nix`, initialises `/etc/nixos/` as a
+   git repository (required for pure flake evaluation), and generates `flake.lock`.
+
+3. **Activate**
+   ```bash
+   sudo nixos-rebuild switch --flake /etc/nixos#vexos
    ```
 
-2. **Clone this repository**
-   ```bash
-   git clone https://github.com/VictoryTek/vex-nix.git
-   cd vex-nix
-   ```
+4. **Reboot**
 
-3. **Generate hardware configuration**
-   ```bash
-   sudo nixos-generate-config --show-hardware-config > hosts/default/hardware-configuration.nix
-   ```
+---
 
-4. **Customize for your system**
-   
-   Edit these files:
-   - `modules/users.nix` - Change username from "nimda"
-   - `hosts/default/configuration.nix` - Update timezone and locale
-   - `home/default.nix` - Update username and git config
-   - `flake.nix` - Change hostname if not "vexos"
+### Keeping Your System Updated
 
-5. **Build and switch**
-   ```bash
-   sudo nixos-rebuild switch --flake .#vexos
-   ```
+After the initial install, `/etc/nixos/` contains only three files and pulls
+all configuration from GitHub on demand:
 
-6. **Reboot and log in**
-
-## Automated Deployment
-
-`scripts/deploy.sh` automates the full deployment cycle: it copies the repository
-to `/etc/nixos/`, handles hardware configuration intelligently, and activates the
-system via `nixos-rebuild switch`.
-
-**Basic usage:**
 ```bash
-sudo bash scripts/deploy.sh
+# Update to latest VexOS from GitHub and rebuild:
+cd /etc/nixos && sudo nix flake update && sudo nixos-rebuild switch --flake /etc/nixos#vexos
+
+# Quick rebuild without updating the lock file:
+sudo nixos-rebuild switch --flake /etc/nixos#vexos
 ```
 
-**Available flags:**
-
-| Flag | Description |
-|------|-------------|
-| `-y`, `--yes` | Skip all interactive confirmation prompts |
-| `--regen-hardware` | Force regenerate `hardware-configuration.nix` via `nixos-generate-config` |
-| `--keep-hardware` | Force keep existing `hardware-configuration.nix` from the current `/etc/nixos/` |
-| `--dry-run` | Print what would happen — make no changes (does not require root) |
-| `-h`, `--help` | Show usage and exit |
-
-**Common examples:**
+The shell aliases in your user environment (`home/default.nix`) do this automatically:
 ```bash
-# Interactive deploy (prompts for confirmation and hardware config choice)
-sudo bash scripts/deploy.sh
-
-# Non-interactive deploy keeping existing hardware config (ideal for re-deploys)
-sudo bash scripts/deploy.sh --yes --keep-hardware
-
-# Force fresh hardware detection (use after adding new hardware)
-sudo bash scripts/deploy.sh --yes --regen-hardware
-
-# Preview all actions without making any changes
-bash scripts/deploy.sh --dry-run
+update   # runs: nix flake update + git add flake.lock + nixos-rebuild switch
+rebuild  # runs: nixos-rebuild switch (no upstream update)
 ```
 
-> **GPU note:** Before deploying, set `gpu.type` in `modules/gpu.nix` to match
-> your hardware (`"nvidia"`, `"amd"`, or `"intel"`). Deploying with the wrong
-> GPU driver can cause a broken graphical environment.
+---
 
-The script automatically backs up any existing `/etc/nixos/` to
-`/etc/nixos.bak-<timestamp>/` before making changes, so rollback is always
-possible.
+### What Lives Where
+
+| Location | Contents |
+|----------|----------|
+| `/etc/nixos/flake.nix` | Thin consumer flake — points to GitHub repo |
+| `/etc/nixos/flake.lock` | Pinned revision of all upstream flake inputs |
+| `/etc/nixos/hardware-configuration.nix` | This machine only — never in the GitHub repo |
+| `github:VexTrex87/vex-nix` | All system config, modules, and home config |
+
+---
+
+### Manual Bootstrap (no curl)
+
+If you prefer not to pipe curl to bash, write the thin flake manually:
+
+```bash
+sudo tee /etc/nixos/flake.nix > /dev/null <<'EOF'
+{
+  description = "VexOS local machine flake";
+
+  inputs.vexos.url = "github:VexTrex87/vex-nix";
+
+  outputs = { self, vexos }: {
+    nixosConfigurations.vexos = vexos.lib.mkVexosSystem {
+      hardwareModule = ./hardware-configuration.nix;
+    };
+  };
+}
+EOF
+
+cd /etc/nixos
+git init -b main
+git add flake.nix hardware-configuration.nix
+nix --extra-experimental-features 'nix-command flakes' flake update
+git add flake.lock
+sudo nixos-rebuild switch --flake /etc/nixos#vexos
+```
+
+> **Note:** `scripts/deploy.sh` is deprecated and will print a migration guide
+> if invoked. Use `scripts/install.sh` for first-time setup instead.
 
 ## What's Included
 

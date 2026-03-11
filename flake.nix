@@ -15,17 +15,31 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
-    nixosConfigurations = {
-      # Default system configuration
-      # Replace "vexos" with your hostname
-      vexos = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  let
+    # ── lib.mkVexosSystem ──────────────────────────────────────────────
+    # Builds a complete VexOS NixOS system configuration.
+    #
+    # Arguments:
+    #   hardwareModule — a NixOS module (path or inline attrset) that
+    #                    provides hardware-specific configuration.
+    #                    MUST set nixpkgs.hostPlatform or the system
+    #                    defaults to "x86_64-linux".
+    #   system         — override the default platform string.
+    #                    Ignored if hardwareModule sets nixpkgs.hostPlatform.
+    #
+    # Usage from a thin local flake:
+    #   nixosConfigurations.myhostname = vexos.lib.mkVexosSystem {
+    #     hardwareModule = ./hardware-configuration.nix;
+    #   };
+    mkVexosSystem = { hardwareModule, system ? "x86_64-linux" }:
+      nixpkgs.lib.nixosSystem {
+        inherit system;
         specialArgs = { inherit inputs; };
         modules = [
+          hardwareModule
           ./hosts/default/configuration.nix
-          ./hosts/default/hardware-configuration.nix
-          
+
           # nix-gaming NixOS modules
           inputs.nix-gaming.nixosModules.pipewireLowLatency
           inputs.nix-gaming.nixosModules.platformOptimizations
@@ -39,6 +53,19 @@
             home-manager.users.nimda = import ./home/default.nix;
           }
         ];
+      };
+  in
+  {
+    # ── Library output ────────────────────────────────────────────────
+    # Exposed for consumption by thin local flakes on target machines.
+    lib.mkVexosSystem = mkVexosSystem;
+
+    # ── CI / nix flake check configuration ───────────────────────────
+    # Uses the in-repo template hardware-configuration.nix.
+    # This is NOT the configuration deployed to real machines.
+    nixosConfigurations = {
+      vexos = mkVexosSystem {
+        hardwareModule = ./hosts/default/hardware-configuration.nix;
       };
     };
   };

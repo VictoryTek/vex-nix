@@ -66,8 +66,8 @@
     shellAliases = {
       ll = "ls -la";
       ".." = "cd ..";
-      update = "sudo nixos-rebuild switch --flake /home/nimda/Projects/vex-nix#vexos";
-      rebuild = "sudo nixos-rebuild switch --flake /home/nimda/Projects/vex-nix#vexos";
+      update  = "cd /etc/nixos && sudo nix flake update && sudo git add flake.lock && sudo nixos-rebuild switch --flake /etc/nixos#vexos";
+      rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#vexos";
       
       # Tailscale shortcuts
       ts = "tailscale";

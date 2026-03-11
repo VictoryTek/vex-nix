@@ -37,6 +37,19 @@ else
   ERRORS=$((ERRORS + 1))
 fi
 
+# ── Step 2b: Verify lib.mkVexosSystem is exported ────────────────────────────
+echo ""
+echo "==> Step 2b: Verify lib.mkVexosSystem output"
+LIB_CMD="nix --extra-experimental-features 'nix-command flakes' eval .#lib.mkVexosSystem --apply builtins.typeOf"
+LIB_RESULT=$(eval "$LIB_CMD" 2>&1) || true
+if echo "$LIB_RESULT" | grep -q '"lambda"'; then
+  pass "lib.mkVexosSystem is exported and is a function"
+else
+  fail "lib.mkVexosSystem is missing or not a function"
+  info "$LIB_RESULT"
+  ERRORS=$((ERRORS + 1))
+fi
+
 # ── Step 3: Formatting check (alejandra or nixpkgs-fmt) ──────────────────────
 echo ""
 echo "==> Step 3: Nix formatting check"
