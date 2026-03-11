@@ -134,14 +134,14 @@
         "tailscale-status@maxgallup.github.com"
       ];
       favorite-apps = [
-        "com.brave.Browser.desktop"
+        "brave-browser.desktop"
         "org.gnome.Nautilus.desktop"
         "com.mitchellh.ghostty.desktop"
         "system-update.desktop"
         "org.gnome.Boxes.desktop"
         "virt-manager.desktop"
         "code.desktop"
-        "com.discordapp.Discord.desktop"
+        "discord.desktop"
       ];
     };
     "org/gnome/desktop/interface" = {
