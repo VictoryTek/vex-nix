@@ -104,7 +104,7 @@
   # between Home Manager's pointer-cursor activation scripts and dconf settings.
   gtk.enable = true;
   gtk.iconTheme = {
-    name = "Kora";
+    name = "kora";
     package = pkgs.kora-icon-theme;
   };
   gtk.cursorTheme = {
@@ -117,7 +117,7 @@
   # (GNOME reads icon/cursor theme from dconf, not just GTK config files.)
   dconf.settings = {
     "org/gnome/desktop/interface" = {
-      icon-theme = "Kora";
+      icon-theme = "kora";
       cursor-theme = "Bibata-Modern-Classic";
       cursor-size = 24;
     };
