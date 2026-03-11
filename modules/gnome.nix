@@ -26,7 +26,7 @@
     gnomeExtensions.dash-to-dock
     gnomeExtensions.alphabetical-app-grid
     gnomeExtensions.gamemode-shell-extension
-    gnomeExtensions.gnome-4x-ui-improvements
+    gnomeExtensions.gnome-40-ui-improvements
     gnomeExtensions.nothing-to-say
     gnomeExtensions.steal-my-focus-window
     gnomeExtensions.tailscale-status
