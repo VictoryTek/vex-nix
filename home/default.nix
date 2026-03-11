@@ -91,6 +91,10 @@
   # GTK theming — enable = true writes gtk-3/4 config files for non-GNOME apps.
   # Icon and cursor theme are set via dconf.settings below (what GNOME actually reads).
   gtk.enable = true;
+  gtk.iconTheme = {
+    name = "Kora";
+    package = pkgs.kora-icon-theme;
+  };
 
   # Explicit dconf overrides so GNOME picks up the correct theme names.
   # (GNOME reads icon/cursor theme from dconf, not just GTK config files.)
