@@ -19,6 +19,17 @@
   # Optimize Nix store
   nix.settings.auto-optimise-store = true;
 
+  # Limit parallel build jobs to reduce peak RAM usage during nixos-rebuild.
+  # Each Nix build job can consume several hundred MB; capping at 2 prevents
+  # the evaluator + linker from exhausting memory on machines with ≤8 GB RAM.
+  nix.settings.max-jobs = 2;
+  nix.settings.cores = 2;
+
+  # zram swap — creates a compressed in-RAM swap device (default: half of RAM).
+  # This gives the kernel headroom to swap build artefacts out of physical RAM
+  # under pressure, preventing OOM kills during large rebuilds.
+  zramSwap.enable = true;
+
   # Enable OpenSSH
   services.openssh = {
     enable = true;
