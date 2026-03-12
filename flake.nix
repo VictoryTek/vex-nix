@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -37,9 +38,15 @@
     #     hardwareModule = ./hardware-configuration.nix;
     #   };
     mkVexosSystem = { hardwareModule, system ? "x86_64-linux" }:
+      let
+        pkgs-unstable = import inputs.nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
+      in
       nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs pkgs-unstable; };
         modules = [
           hardwareModule
           ./hosts/default/configuration.nix
@@ -56,7 +63,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs; };
+            home-manager.extraSpecialArgs = { inherit inputs pkgs-unstable; };
             home-manager.users.nimda = import ./home/default.nix;
           }
         ];

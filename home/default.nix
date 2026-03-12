@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 
 {
   # Home Manager configuration for user-specific settings
@@ -15,12 +15,17 @@
   home.packages = with pkgs; [
     # Development tools
     vscode
+    rustup
+    pkgs-unstable.nodejs_25
 
     # Browsers
     brave
 
     # Gaming Utilities
     protonplus
+
+    # Remote desktop
+    pkgs-unstable.rustdesk
 
     # Terminal emulators
     ghostty
@@ -124,7 +129,7 @@
         "steal-my-focus-window@steal-my-focus-window"
         "tailscale-status@maxgallup.github.com"
         "caffeine@patapon.info"
-        "restart-to@pratap.fastmail.fm"
+        pkgs.gnomeExtensions.restart-to.extensionUuid
         "blur-my-shell@aunetx"
         "background-logo@fedorahosted.org"
       ];
