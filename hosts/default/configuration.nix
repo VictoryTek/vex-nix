@@ -8,6 +8,7 @@
     ../../modules/gpu.nix
     ../../modules/gaming.nix
     ../../modules/asus.nix
+    ../../modules/flatpak.nix
   ];
 
   # GPU driver selection — set to "nvidia", "amd", "intel", or "none"

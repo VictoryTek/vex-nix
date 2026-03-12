@@ -13,9 +13,13 @@
       url = "github:fufexan/nix-gaming";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Declarative Flatpak management
+    # Provides: nixosModules.nix-flatpak, homeManagerModules.nix-flatpak
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nix-flatpak, ... }@inputs:
   let
     # ── lib.mkVexosSystem ──────────────────────────────────────────────
     # Builds a complete VexOS NixOS system configuration.
@@ -43,6 +47,9 @@
           # nix-gaming NixOS modules
           inputs.nix-gaming.nixosModules.pipewireLowLatency
           inputs.nix-gaming.nixosModules.platformOptimizations
+
+          # nix-flatpak declarative Flatpak management
+          nix-flatpak.nixosModules.nix-flatpak
 
           # Home Manager integration
           home-manager.nixosModules.home-manager

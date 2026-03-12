@@ -133,10 +133,10 @@
         "appindicatorsupport@rgcjonas.gmail.com"
         "dash-to-dock@micxgx.gmail.com"
         "AlphabeticalAppGrid@stuarthayhurst"
-        "gamemode@dhaubenschild.de"
+        "gamemodeshellextension@trsnaqe.com"
         "gnome-ui-tune@itstime.tech"
-        "nothing-to-say@joelkl.eu"
-        "steal-my-focus-window@b00f.github.io"
+        "nothing-to-say@extensions.gnome.wouter.bolsterl.ee"
+        "steal-my-focus-window@steal-my-focus-window"
         "tailscale-status@maxgallup.github.com"
       ];
       favorite-apps = [
