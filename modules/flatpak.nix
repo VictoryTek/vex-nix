@@ -24,6 +24,7 @@
     #"com.discordapp.Discord"
     "com.mattjakeman.ExtensionManager"
     "com.rustdesk.RustDesk"
+    "io.github.kolunmi.Bazaar"
   ];
 
   # ── Update policy ─────────────────────────────────────────────────────
