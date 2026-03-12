@@ -26,7 +26,7 @@ let
     #     "https://github.com/Diolinux/PhotoGIMP/archive/refs/tags/3.0.tar.gz"
     # OR: set hash = ""; and Nix will report the correct hash on the first
     # failed build attempt — replace the empty string with the reported value.
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    hash = "sha256-R9MMidsR2+QFX6tu+j5k2BejxZ+RGwzA0DR9GheO89M=";
   };
 in
 {
