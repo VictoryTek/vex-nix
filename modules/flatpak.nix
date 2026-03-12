@@ -22,6 +22,7 @@
     "com.simplenote.Simplenote"
     "io.github.flattool.Warehouse"
     "app.zen_browser.zen"
+    #"com.discordapp.Discord"
   ];
 
   # ── Update policy ─────────────────────────────────────────────────────

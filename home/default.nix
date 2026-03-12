@@ -39,9 +39,6 @@
     bibata-cursors
     kora-icon-theme
 
-    # Communication
-    discord
-
     # System utilities
     fastfetch
     btop
