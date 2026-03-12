@@ -66,9 +66,7 @@
     shellAliases = {
       ll = "ls -la";
       ".." = "cd ..";
-      update  = "cd /etc/nixos && sudo nix flake update && sudo git add flake.lock && sudo nixos-rebuild switch --flake /etc/nixos#vexos";
-      rebuild = "sudo nixos-rebuild switch --flake /etc/nixos#vexos";
-      
+
       # Tailscale shortcuts
       ts = "tailscale";
       tss = "tailscale status";

@@ -1,11 +1,10 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 {
   # Plymouth boot splash screen
   boot.plymouth = {
     enable = true;
-    theme = "breeze";
-    themePackages = [ pkgs.breeze-plymouth ];
+    theme = "spinner";
   };
 
   # Silent boot kernel parameters for a clean Plymouth experience
