@@ -34,8 +34,9 @@ in
 
   config = lib.mkIf config.photogimp.enable {
     # ── PhotoGIMP GIMP config files ─────────────────────────────────────────
-    # Copies all files from PhotoGIMP's .config/GIMP/3.0/ into the user's
-    # GIMP config directory. Only runs when the PhotoGIMP version changes
+    # Copies all files from PhotoGIMP's .var/app/org.gimp.GIMP/config/GIMP/3.0/
+    # (the layout used in the 3.0 tag) into the user's GIMP config directory.
+    # Only runs when the PhotoGIMP version changes
     # (or on first install) to preserve user's runtime GIMP customisations.
     home.activation.installPhotoGIMP = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       GIMP_CONFIG="$HOME/.config/GIMP/3.0"
@@ -46,7 +47,7 @@ in
         $VERBOSE_ECHO "PhotoGIMP: installing version ${photogimpVersion} config files"
         $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "$GIMP_CONFIG"
         $DRY_RUN_CMD ${pkgs.coreutils}/bin/cp -rf \
-          ${photogimp}/.config/GIMP/3.0/. \
+          ${photogimp}/.var/app/org.gimp.GIMP/config/GIMP/3.0/. \
           "$GIMP_CONFIG/"
         $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod -R u+w "$GIMP_CONFIG/"
         if [ -z "$DRY_RUN_CMD" ]; then
