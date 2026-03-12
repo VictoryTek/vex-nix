@@ -59,7 +59,7 @@
     gnome-characters
     gnome-tour
     gnome-user-docs
-    gnome-extensions
+    gnomeExtensions
     yelp               # GNOME Help
     epiphany           # GNOME Web browser
 
