@@ -27,7 +27,13 @@
     ++ lib.optionals (config.gpu.type == "amd") [ "amdgpu" ]
     ++ lib.optionals (config.gpu.type == "nvidia") [
       "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"
-    ];
+    ]
+    # Fallback framebuffer drivers so Plymouth renders on BIOS/UEFI
+    # framebuffer when no discrete GPU driver is active.
+    ++ lib.optionals (config.gpu.type == "none") [ "simpledrm" "bochs_drm" ];
+
+  # Ensure Plymouth starts before the display is lost during boot.
+  boot.initrd.systemd.enable = true;
 
   # Hide grub menu on boot (press Shift during POST to interrupt).
   boot.loader.grub.timeoutStyle = "hidden";

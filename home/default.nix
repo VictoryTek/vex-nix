@@ -50,17 +50,6 @@
     blivet-gui
   ];
 
-  # Git configuration
-  #programs.git = {
-  #  enable = true;
-  #  settings = {
-  #    user.name = "Nimda";
-  #    user.email = "vex@example.com";  # Change this
-  #    init.defaultBranch = "main";
-  #    pull.rebase = false;
-  #  };
-  #};
-
   # Bash configuration
   programs.bash = {
     enable = true;
