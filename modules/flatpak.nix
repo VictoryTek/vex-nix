@@ -18,7 +18,6 @@
     "io.missioncenter.MissionCenter"
     "org.onlyoffice.desktopeditors"
     "org.prismlauncher.PrismLauncher"
-    "com.rustdesk.RustDesk"
     "com.simplenote.Simplenote"
     "io.github.flattool.Warehouse"
     "app.zen_browser.zen"
