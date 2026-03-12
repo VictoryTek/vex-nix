@@ -9,6 +9,10 @@
   services.displayManager.gdm.wayland = true;
   services.desktopManager.gnome.enable = true;
 
+  # Auto-login — skips the GDM lock screen on boot
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "nimda";
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -55,6 +59,7 @@
     gnome-characters
     gnome-tour
     gnome-user-docs
+    gnome-extensions
     yelp               # GNOME Help
     epiphany           # GNOME Web browser
 

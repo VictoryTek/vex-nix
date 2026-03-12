@@ -123,9 +123,14 @@
         "nothing-to-say@extensions.gnome.wouter.bolsterl.ee"
         "steal-my-focus-window@steal-my-focus-window"
         "tailscale-status@maxgallup.github.com"
+        "caffeine@patapon.info"
+        "restart-to@pratap.fastmail.fm"
+        "blur-my-shell@aunetx"
+        "background-logo@fedorahosted.org"
       ];
       favorite-apps = [
         "brave-browser.desktop"
+        "app.zen_browser.zen.desktop"
         "org.gnome.Nautilus.desktop"
         "com.mitchellh.ghostty.desktop"
         "system-update.desktop"
@@ -139,6 +144,9 @@
       icon-theme = "kora";
       cursor-theme = "Bibata-Modern-Classic";
       cursor-size = 24;
+    };
+    "org/gnome/desktop/wm/preferences" = {
+      button-layout = "appmenu:minimize,maximize,close";
     };
     "org/gnome/desktop/background" = {
       picture-uri      = "file://${config.home.homeDirectory}/Pictures/Wallpapers/vex-bb-light.jxl";
