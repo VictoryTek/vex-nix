@@ -23,6 +23,7 @@
     "io.github.flattool.Warehouse"
     "app.zen_browser.zen"
     #"com.discordapp.Discord"
+    "com.mattjakeman.ExtensionManager"
   ];
 
   # ── Update policy ─────────────────────────────────────────────────────

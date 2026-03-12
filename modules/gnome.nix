@@ -59,13 +59,10 @@
     gnome-characters
     gnome-tour
     gnome-user-docs
-    gnomeExtensions
     yelp               # GNOME Help
     epiphany           # GNOME Web browser
 
     # Additional exclusions
-    # TODO: Exclude GNOME Extensions manager app once correct nixpkgs attribute is identified
-    # (gnome-extensions-app and gnome-shell-extensions are both wrong for this nixpkgs revision)
     xterm                  # Legacy X11 terminal
     geary                  # GNOME email client
     gnome-music            # GNOME music player
@@ -74,4 +71,17 @@
 
   # Enable GNOME keyring
   services.gnome.gnome-keyring.enable = true;
+
+  # The GNOME Extensions app (green puzzle piece, org.gnome.Extensions) is bundled
+  # inside gnome-shell (a mandatory package) and cannot be removed via excludePackages.
+  # Patch the derivation to drop its desktop file so it never appears in the app grid.
+  nixpkgs.overlays = [
+    (final: prev: {
+      gnome-shell = prev.gnome-shell.overrideAttrs (old: {
+        postInstall = (old.postInstall or "") + ''
+          rm -f $out/share/applications/org.gnome.Extensions.desktop
+        '';
+      });
+    })
+  ];
 }
