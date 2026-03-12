@@ -28,9 +28,11 @@
     ++ lib.optionals (config.gpu.type == "nvidia") [
       "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"
     ]
-    # Fallback framebuffer drivers so Plymouth renders on BIOS/UEFI
+    # Fallback framebuffer driver so Plymouth renders on BIOS/UEFI
     # framebuffer when no discrete GPU driver is active.
-    ++ lib.optionals (config.gpu.type == "none") [ "simpledrm" "bochs_drm" ];
+    # Note: bochs_drm was removed in Linux 6.12; simpledrm handles all
+    # generic framebuffers including QEMU/KVM guests.
+    ++ lib.optionals (config.gpu.type == "none") [ "simpledrm" ];
 
   # Ensure Plymouth starts before the display is lost during boot.
   boot.initrd.systemd.enable = true;
