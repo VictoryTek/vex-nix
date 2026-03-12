@@ -160,6 +160,12 @@
       picture-uri-dark = "file://${config.home.homeDirectory}/Pictures/Wallpapers/vex-bb-dark.jxl";
       picture-options  = "zoom";
     };
+    "org/gnome/shell/extensions/dash-to-dock" = {
+      dock-position = "LEFT";
+    };
+    "org/gnome/desktop/screensaver" = {
+      lock-enabled = false;
+    };
   };
 
   # Let Home Manager manage itself

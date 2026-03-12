@@ -34,6 +34,7 @@
     gnomeExtensions.restart-to
     gnomeExtensions.blur-my-shell
     gnomeExtensions.appindicator
+    gnomeExtensions.background-logo
     gnome-boxes
   ];
 

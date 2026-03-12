@@ -9,6 +9,7 @@
     ../../modules/gaming.nix
     ../../modules/asus.nix
     ../../modules/flatpak.nix
+    ../../modules/plymouth.nix
   ];
 
   # GPU driver selection — set to "nvidia", "amd", "intel", or "none"
