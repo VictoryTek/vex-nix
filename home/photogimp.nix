@@ -60,15 +60,15 @@ in
     # Installs PhotoGIMP-branded icons into the user hicolor icon theme.
     # Uses recursive = true so individual per-file symlinks are created,
     # which is safe alongside other icon themes already in hicolor/.
-    #
-    # NOTE: The .desktop file override (org.gimp.GIMP.desktop) is intentionally
-    # omitted. VexOS installs GIMP via Flatpak (nix-flatpak), and the Flatpak
-    # runtime will overwrite any user-local .desktop file when GIMP is installed
-    # or updated. The GIMP layout/shortcuts/theme changes still apply — only the
-    # launcher name ("PhotoGIMP") and icon in the app grid are cosmetically skipped.
     xdg.dataFile."icons/hicolor" = {
       source    = photogimp + "/.local/share/icons/hicolor";
       recursive = true;
+    };
+
+    # ── PhotoGIMP .desktop entry ─────────────────────────────────────────────
+    # Overrides the GIMP launcher name and icon with the PhotoGIMP branding.
+    xdg.dataFile."applications/org.gimp.GIMP.desktop" = {
+      source = photogimp + "/.local/share/applications/org.gimp.GIMP.desktop";
     };
   };
 }
