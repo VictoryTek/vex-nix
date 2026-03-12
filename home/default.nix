@@ -33,6 +33,7 @@
     eza
     fzf
     tmux
+    just
 
     # Themes
     bibata-cursors
