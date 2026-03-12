@@ -24,9 +24,6 @@
     # Gaming Utilities
     protonplus
 
-    # Remote desktop
-    pkgs-unstable.rustdesk
-
     # Terminal emulators
     ghostty
 

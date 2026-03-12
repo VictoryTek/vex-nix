@@ -23,6 +23,7 @@
     "app.zen_browser.zen"
     #"com.discordapp.Discord"
     "com.mattjakeman.ExtensionManager"
+    "com.rustdesk.RustDesk"
   ];
 
   # ── Update policy ─────────────────────────────────────────────────────
