@@ -30,16 +30,25 @@
     gnomeExtensions.nothing-to-say
     gnomeExtensions.steal-my-focus-window
     gnomeExtensions.tailscale-status
+    gnomeExtensions.caffeine
+    gnomeExtensions.restart-to
+    gnomeExtensions.blur-my-shell
+    gnomeExtensions.appindicator
     gnome-boxes
   ];
 
-  # Virtualisation backend for GNOME Boxes
+  # Virtualisation backend for GNOME Boxes and virt-manager
   virtualisation.libvirtd.enable = true;
+  # Installs virt-manager with polkit rules so non-root users can manage VMs
+  programs.virt-manager.enable = true;
+  # USB passthrough support for virt-manager VMs
+  virtualisation.spiceUSBRedirection.enable = true;
 
   # Exclude some default GNOME packages (optional)
   environment.gnome.excludePackages = with pkgs; [
     gnome-weather
     gnome-clocks
+    gnome-contacts
     gnome-maps
     simple-scan        # Document scanner
     gnome-characters

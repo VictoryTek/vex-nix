@@ -19,6 +19,9 @@
     # Browsers
     brave
 
+    # Gaming Utilities
+    protonplus
+
     # Terminal emulators
     ghostty
 
@@ -34,9 +37,6 @@
     # Themes
     bibata-cursors
     kora-icon-theme
-
-    # Virtualization
-    virt-manager
 
     # Communication
     discord
