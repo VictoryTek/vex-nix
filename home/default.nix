@@ -1,8 +1,14 @@
 { config, pkgs, pkgs-unstable, ... }:
 
 {
+  imports = [
+    ./photogimp.nix
+  ];
+
   # Home Manager configuration for user-specific settings
   # This is managed by Home Manager and controls user environment
+
+  photogimp.enable = true;
 
   home.username = "nimda";
   home.homeDirectory = "/home/nimda";
@@ -137,7 +143,6 @@
         "com.mitchellh.ghostty.desktop"
         "system-update.desktop"
         "org.gnome.Boxes.desktop"
-        "virt-manager.desktop"
         "code.desktop"
         "discord.desktop"
       ];
