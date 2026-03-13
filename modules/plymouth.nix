@@ -34,9 +34,6 @@
     # generic framebuffers including QEMU/KVM guests.
     ++ lib.optionals (config.gpu.type == "none") [ "simpledrm" ];
 
-  # Ensure Plymouth starts before the display is lost during boot.
-  boot.initrd.systemd.enable = true;
-
   # Hide grub menu on boot (press Shift during POST to interrupt).
   boot.loader.grub.timeoutStyle = "hidden";
   boot.loader.timeout = 0;
