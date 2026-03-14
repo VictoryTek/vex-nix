@@ -10,10 +10,17 @@
     ../../modules/asus.nix
     ../../modules/flatpak.nix
     ../../modules/plymouth.nix
+    ../../modules/kernel.nix
   ];
 
   # GPU driver selection — set to "nvidia", "amd", "intel", or "none"
   gpu.type = "none";
+
+  # Kernel selection — see `just list-kernels` for all options
+  # Valid: "stock", "cachyos-gaming", "cachyos-server", "cachyos-desktop",
+  #        "cachyos-handheld", "cachyos-lts", "cachyos-hardened",
+  #        "bazzite" (placeholder — requires vex-kernels flake)
+  kernel.type = "stock";
 
   # Hostname
   networking.hostName = "vexos";

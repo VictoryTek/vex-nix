@@ -18,6 +18,21 @@
     # Declarative Flatpak management
     # Provides: nixosModules.nix-flatpak, homeManagerModules.nix-flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    # CachyOS kernels for NixOS
+    # Provides: overlays.default (pkgs.cachyosKernels.*)
+    nix-cachyos-kernel = {
+      url = "github:xddxdd/nix-cachyos-kernel/release";
+      # Do NOT override nixpkgs — kernel patches depend on nix-cachyos-kernel's nixpkgs
+    };
+
+    # TODO: Uncomment when the vex-kernels repo is ready.
+    # Bazzite and custom kernels for NixOS.
+    # Provides: overlays.default (pkgs.vexKernels.*)
+    # vex-kernels = {
+    #   url = "github:<owner>/vex-kernels";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs = { self, nixpkgs, home-manager, nix-flatpak, ... }@inputs:
@@ -50,6 +65,13 @@
         modules = [
           hardwareModule
           ./hosts/default/configuration.nix
+
+          # CachyOS kernel overlay — exposes pkgs.cachyosKernels.*
+          { nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.default ]; }
+
+          # TODO: Uncomment when vex-kernels input is added above.
+          # Bazzite kernel overlay — exposes pkgs.vexKernels.*
+          # { nixpkgs.overlays = [ inputs.vex-kernels.overlays.default ]; }
 
           # nix-gaming NixOS modules
           inputs.nix-gaming.nixosModules.pipewireLowLatency
