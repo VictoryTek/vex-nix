@@ -26,6 +26,13 @@
       # Do NOT override nixpkgs — kernel patches depend on nix-cachyos-kernel's nixpkgs
     };
 
+    # Up — modern Linux system update & upgrade GUI (GTK4 + libadwaita)
+    # Provides: packages.${system}.default
+    up = {
+      url = "github:VictoryTek/Up";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     # TODO: Uncomment when the vex-kernels repo is ready.
     # Bazzite and custom kernels for NixOS.
     # Provides: overlays.default (pkgs.vexKernels.*)

@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-unstable, ... }:
+{ config, pkgs, pkgs-unstable, inputs, ... }:
 
 {
   imports = [
@@ -53,6 +53,7 @@
     inxi
     pavucontrol
     blivet-gui
+    inputs.up.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   # Bash configuration
@@ -141,7 +142,7 @@
         "app.zen_browser.zen.desktop"
         "org.gnome.Nautilus.desktop"
         "com.mitchellh.ghostty.desktop"
-        "system-update.desktop"
+        "io.github.up.desktop"
         "org.gnome.Boxes.desktop"
         "code.desktop"
         "discord.desktop"
