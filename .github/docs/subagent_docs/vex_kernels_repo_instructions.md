@@ -6,7 +6,7 @@
 > able to create every file from scratch using only those instructions.
 >
 > The "Notes for the User" section after the prompt explains manual steps
-> (creating the repo, registering garnix, filling in hashes).
+> (creating the repo, generating signing keys, configuring GitHub Pages, filling in hashes).
 
 ---
 
@@ -35,10 +35,7 @@ for NixOS using `buildLinux`. Expose a `pkgs.vexKernels.linuxPackages-bazzite`
 overlay output so that the VexOS NixOS flake can set
 `boot.kernelPackages = pkgs.vexKernels.linuxPackages-bazzite;`.
 
-**Binary cache:** [garnix.io](https://garnix.io) — free for public GitHub repos.
-The garnix GitHub App automatically builds every push and caches results.
-Consumers add a single substituter URL and public key; no account needed
-on their side.
+**Binary cache:** GitHub Actions builds kernels on a 16-core runner and publishes the resulting NARs to **GitHub Pages** as a standard Nix binary cache. Consumers add the GitHub Pages URL as a substituter and the repo's ed25519 public key as a trusted key. No third-party services required.
 
 **Architecture:** x86_64-only.
 
@@ -262,57 +259,30 @@ subdirectory reference:
 
 ---
 
-### File 4 — `garnix.yaml`
+### File 4 — `.github/workflows/build.yml`
 
-Create `garnix.yaml` at the repository root. garnix reads this to decide
-which outputs to build and cache. We limit it to the one package we expose
-to avoid wasting build minutes on checks.
-
-```yaml
-# garnix.yaml
-#
-# garnix.io CI configuration for vex-kernels.
-# https://garnix.io/docs/ci/yaml_config/
-#
-# garnix automatically caches everything it builds.
-# Consumers add:
-#   nix.settings.substituters        = [ "https://cache.garnix.io" ];
-#   nix.settings.trusted-public-keys = [ "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=" ];
-
-builds:
-  include:
-    # Only build the kernel package — checks and devShells are excluded
-    # because the kernel build already takes 1-2 hours.
-    - packages.x86_64-linux.linux-bazzite
-  exclude: []
-```
-
----
-
-### File 5 — `.github/workflows/build.yml`
-
-Create `.github/workflows/build.yml`. This workflow validates the flake
-structure and checks that the derivation evaluates, but does **not** compile
-the kernel (garnix handles the full build and caching in the background).
+Create `.github/workflows/build.yml`. This workflow builds the kernel on a
+16-core runner, signs and exports NARs, and deploys them to GitHub Pages as
+a binary cache.
 
 ```yaml
-# .github/workflows/build.yml
-#
-# Validates flake structure on every push and pull request.
-# Actual kernel compilation is handled by the garnix GitHub App —
-# install it at https://garnix.io/docs/getting-started/github-app/
-
-name: Flake Check
+name: Build and Cache Kernels
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
 
 jobs:
-  flake-check:
-    name: nix flake check (no build)
-    runs-on: ubuntu-latest
+  build-bazzite:
+    name: Build linux-bazzite kernel
+    runs-on: ubuntu-22.04-16-core
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -321,39 +291,57 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Restore Nix store cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/nix-cache
+          key: nix-bazzite-${{ hashFiles('kernels/bazzite/default.nix') }}
+          restore-keys: nix-bazzite-
 
-      - name: Show flake outputs
-        run: nix flake show
-
-      - name: Check flake (evaluate only, no build)
-        run: nix flake check --no-build
-
-  eval-kernel:
-    name: Evaluate kernel derivation
-    runs-on: ubuntu-latest
-    needs: flake-check
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-
-      - name: Magic Nix Cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
-
-      - name: Evaluate derivation metadata
+      - name: Build linux-bazzite
         run: |
-          nix eval .#packages.x86_64-linux.linux-bazzite.version
-          nix eval .#packages.x86_64-linux.linux-bazzite.pname
+          nix build .#packages.x86_64-linux.linux-bazzite \
+            --no-link --out-link /tmp/linux-bazzite -L
+
+      - name: Export and sign NARs
+        env:
+          NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
+        run: |
+          mkdir -p ./cache
+          nix copy --to "file://$(pwd)/cache?compression=zstd" \
+            --no-check-sigs /tmp/linux-bazzite
+          nix store sign \
+            --key-file <(echo "$NIX_SIGNING_KEY") \
+            --recursive /tmp/linux-bazzite
+          nix copy --to "file://$(pwd)/cache?compression=zstd" \
+            /tmp/linux-bazzite
+          printf 'StoreDir: /nix/store\nWantMassQuery: 1\nPriority: 50\n' \
+            > ./cache/nix-cache-info
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./cache
+
+  deploy-cache:
+    name: Deploy cache to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-bazzite
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 ```
 
 ---
 
-### File 6 — `README.md`
+### File 5 — `README.md`
 
 Create `README.md` at the repository root:
 
@@ -370,20 +358,21 @@ Currently provided:
 
 ## Binary Cache
 
-Kernels are built and cached by [garnix.io](https://garnix.io).
-Without the cache, the first build takes **1–2+ hours**.
-With the cache, installation is instant.
+Kernels are built by GitHub Actions (16-core runner) and served as a Nix
+binary cache via GitHub Pages. Without the cache, the first build takes
+**1–2+ hours**. With the cache, installation is instant.
 
 Add to your NixOS configuration:
 
 ```nix
 nix.settings = {
-  substituters        = [ "https://cache.garnix.io" ];
-  trusted-public-keys = [
-    "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-  ];
+  substituters        = [ "https://YOUR_GITHUB_USERNAME.github.io/vex-kernels" ];
+  trusted-public-keys = [ "vex-kernels-1:YOUR_PUBLIC_KEY_HERE" ];
 };
 ```
+
+Replace `YOUR_GITHUB_USERNAME` with your GitHub username and
+`YOUR_PUBLIC_KEY_HERE` with the public key generated during repo setup.
 
 ## Usage in a NixOS Flake
 
@@ -419,7 +408,7 @@ boot.kernelPackages = pkgs.vexKernels.linuxPackages-bazzite;
 3. Reset all `hash` fields to `"sha256-AAAA...="` (any invalid hash).
 4. Run `nix build .#linux-bazzite 2>&1 | grep "got:"` for each fetch.
 5. Replace placeholders with the reported hashes.
-6. Commit and push — garnix will rebuild and cache automatically.
+6. Commit and push — GitHub Actions will rebuild and deploy the cache automatically.
 
 ## Source
 
@@ -477,14 +466,14 @@ the entire block:
 (lib.mkIf (cfg.type == "bazzite") {
   boot.kernelPackages = pkgs.vexKernels.linuxPackages-bazzite;
 
-  # Binary cache — fetches the pre-built kernel from garnix.io instead
+  # Binary cache — fetches the pre-built kernel from GitHub Pages instead
   # of compiling locally (compilation takes 1-2+ hours without cache).
   nix.settings = {
     extra-substituters = [
-      "https://cache.garnix.io"
+      "https://YOUR_GITHUB_USERNAME.github.io/vex-kernels"
     ];
     extra-trusted-public-keys = [
-      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "vex-kernels-1:YOUR_PUBLIC_KEY_HERE"
     ];
   };
 })
@@ -497,12 +486,13 @@ the entire block:
 1. **Kernel compilation time:** The first `nix build` without a populated
    cache takes **1–2+ hours** on modern hardware. This is normal. GitHub
    Actions CI is intentionally configured to skip the actual build and
-   delegate it to garnix.
+   build kernels on a 16-core GitHub Actions runner and deploy them to a GitHub Pages binary cache.
 
-2. **garnix free tier:** garnix is free for public repos. After the first
-   garnix-triggered build completes (triggered automatically on each push),
-   subsequent `nixos-rebuild` runs on any machine will pull the pre-built
-   NAR from `cache.garnix.io` in seconds.
+2. **GitHub Actions + GitHub Pages cache:** The 16-core GitHub Actions runner
+   (free for public repos) handles the full kernel build. After the first
+   workflow run completes (triggered automatically on each push), subsequent
+   `nixos-rebuild` runs on any machine will pull the pre-built NAR from
+   the GitHub Pages cache in seconds.
 
 3. **Hash placeholders:** Every `hash = "sha256-AAA...="` in
    `kernels/bazzite/default.nix` is a placeholder that will cause Nix to
@@ -563,12 +553,27 @@ git remote add origin https://github.com/YOUR_USERNAME/vex-kernels.git
 git push -u origin main
 ```
 
-#### 2. Install the garnix GitHub App
+#### 2. Generate signing keys and configure GitHub
 
-Visit https://garnix.io/docs/getting-started/github-app/ and install the
-garnix app on your `vex-kernels` repo. After the first push, garnix will
-pick up the build automatically (look for a commit check on GitHub labeled
-"garnix"). The first build takes 1–2 hours.
+```bash
+# Generate ed25519 signing key pair
+nix-store --generate-binary-cache-key vex-kernels-1 \
+  /tmp/vex-kernels-private.pem \
+  /tmp/vex-kernels-public.pem
+
+cat /tmp/vex-kernels-public.pem   # ← paste this as YOUR_PUBLIC_KEY_HERE everywhere
+cat /tmp/vex-kernels-private.pem  # ← add as GitHub Secret (next step)
+```
+
+1. Go to your repo → **Settings → Secrets and variables → Actions → New repository secret**
+   - Name: `NIX_SIGNING_KEY`
+   - Value: paste contents of `/tmp/vex-kernels-private.pem`
+
+2. Go to your repo → **Settings → Pages**
+   - Set Source to **GitHub Actions** → Save
+
+3. Replace every occurrence of `YOUR_PUBLIC_KEY_HERE` in README.md and
+   in VexOS `modules/kernel.nix` with the actual public key string.
 
 #### 3. Fill in the sha256 hashes
 
@@ -615,12 +620,12 @@ sudo nixos-rebuild build --flake .#vexos
 | Decision | Rationale |
 |----------|-----------|
 | Use `bazzite-org/kernel-bazzite` not `ublue-os/bazzite` | Bazzite only moved the kernel to its own org repo (`bazzite-org/kernel-bazzite`) in late 2025. The main `ublue-os/bazzite` is an OCI container image builder, not the kernel source. |
-| garnix over Cachix or self-hosted Hydra | garnix is zero-config for public repos: install the GitHub App, push, and the cache is populated automatically. No account setup, no API keys, no self-hosted infrastructure. The public key `cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=` is stable and documented. |
+| GitHub Actions + GitHub Pages as binary cache | Zero third-party dependencies. A 16-core GitHub Actions runner (free for public repos) handles kernel compilation. NARs are signed with a repo-owned ed25519 key and deployed to GitHub Pages, which serves them as a standard Nix substituter. The public key and substituter URL are fully under the repo owner's control. |
 | `inputs.nixpkgs.follows` NOT set in vex-kernels | Kernel patches in nixpkgs are tied to specific kernel versions. If VexOS follows a different nixpkgs revision that ships a different 6.17.x, `buildLinux` may fail to apply the patches. Each repo pins its own nixpkgs to guarantee compatibility. |
 | Use Fedora x86_64 config as `configfile` | This is the exact config Bazzite ships. Using nixpkgs' generic defconfig would miss many gaming/handheld tunings. `make olddefconfig` handles any conflicts. |
 | 4 separate patch fetches, not a tarball | Allows per-patch version pinning and clear visibility into what's applied. Easy to add/remove individual patches without re-fetching everything. |
 | `pkgs.vexKernels.linuxPackages-bazzite` overlay shape | Mirrors the `pkgs.cachyosKernels.*` shape used by `nix-cachyos-kernel`, which VexOS already consumes. Consistent ergonomics for kernel selection in `modules/kernel.nix`. |
-| GitHub Actions only evaluates, doesn't build | Kernel builds are too slow for standard GitHub Actions runners (1-2 hours). Garnix is the CI/build engine; GitHub Actions just validates the flake evaluates correctly. |
+| 16-core GitHub Actions runner for full builds | Kernel builds take 1–2 hours; a standard 2-core runner would time out. The 16-core runner (free for public repos) completes the full kernel build and then deploys NARs to GitHub Pages as a binary cache. |
 
 ---
 
@@ -633,5 +638,5 @@ When a new Bazzite release is tagged (e.g., new ba## or new x.y.z version):
 - [ ] Update `bazziteRelease` (e.g., `ba28` → `ba30`)
 - [ ] Update `bazziteBranch` if minor version changed (e.g., `bazzite-6.17` → `bazzite-6.18`)
 - [ ] Invalidate all hash placeholders and re-run `nix build` to get new hashes
-- [ ] Commit and push — garnix rebuilds and caches automatically
+- [ ] Commit and push — GitHub Actions will rebuild and deploy the cache automatically
 - [ ] Run `nix flake update vex-kernels` in VexOS to pick up the new revision

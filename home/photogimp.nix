@@ -67,8 +67,56 @@ in
 
     # ── PhotoGIMP .desktop entry ─────────────────────────────────────────────
     # Overrides the GIMP launcher name and icon with the PhotoGIMP branding.
-    xdg.dataFile."applications/org.gimp.GIMP.desktop" = {
-      source = photogimp + "/.local/share/applications/org.gimp.GIMP.desktop";
+    # Uses xdg.desktopEntries (Home Manager declarative API) instead of
+    # xdg.dataFile to avoid:
+    #   1. Shadowing the Flatpak export via $XDG_DATA_HOME
+    #   2. Broken Exec=/usr/bin/flatpak (nonexistent on NixOS)
+    #   3. Stale --command=gimp-2.10 (GIMP 3.0 uses 'gimp')
+    # Generated via pkgs.makeDesktopItem; installed with lib.hiPrio.
+    xdg.desktopEntries."org.gimp.GIMP" = {
+      name          = "PhotoGIMP";
+      genericName   = "Image Editor";
+      comment       = "Create images and edit photographs";
+      exec          = "flatpak run org.gimp.GIMP %U";
+      icon          = "photogimp";
+      terminal      = false;
+      startupNotify = true;
+      categories    = [ "Graphics" "2DGraphics" "RasterGraphics" "GTK" ];
+      mimeType      = [
+        "image/bmp"
+        "image/g3fax"
+        "image/gif"
+        "image/jpeg"
+        "image/png"
+        "image/tiff"
+        "image/webp"
+        "image/heif"
+        "image/heic"
+        "image/svg+xml"
+        "image/x-bmp"
+        "image/x-compressed-xcf"
+        "image/x-exr"
+        "image/x-gimp-gbr"
+        "image/x-gimp-gih"
+        "image/x-gimp-pat"
+        "image/x-icon"
+        "image/x-pcx"
+        "image/x-portable-anymap"
+        "image/x-portable-bitmap"
+        "image/x-portable-graymap"
+        "image/x-portable-pixmap"
+        "image/x-psd"
+        "image/x-sgi"
+        "image/x-tga"
+        "image/x-wmf"
+        "image/x-xcf"
+        "image/x-xcursor"
+        "image/x-xpixmap"
+        "image/x-xwindowdump"
+        "image/jp2"
+        "application/pdf"
+        "application/postscript"
+      ];
     };
   };
 }
