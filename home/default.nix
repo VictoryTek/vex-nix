@@ -149,9 +149,10 @@
       ];
     };
     "org/gnome/desktop/interface" = {
-      icon-theme = "kora";
-      cursor-theme = "Bibata-Modern-Classic";
+      clock-format = "12h";
       cursor-size = 24;
+      cursor-theme = "Bibata-Modern-Classic";
+      icon-theme = "kora";
     };
     "org/gnome/desktop/wm/preferences" = {
       button-layout = "appmenu:minimize,maximize,close";
