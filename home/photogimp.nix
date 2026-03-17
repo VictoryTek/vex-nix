@@ -56,6 +56,20 @@ in
       fi
     '';
 
+    # ── PhotoGIMP icon theme cache ───────────────────────────────────────────
+    # Rebuilds the GTK hicolor icon theme cache after xdg.dataFile places the
+    # PhotoGIMP icon symlinks. Without this, GTK cannot find Icon=photogimp
+    # and silently falls back to the GIMP icon.
+    home.activation.updatePhotogimpIconCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      $VERBOSE_ECHO "PhotoGIMP: updating hicolor icon theme cache"
+      if [ -d "$HOME/.local/share/icons/hicolor" ]; then
+        $DRY_RUN_CMD ${pkgs.gtk3}/bin/gtk-update-icon-cache \
+          --ignore-theme-index \
+          --force \
+          "$HOME/.local/share/icons/hicolor"
+      fi
+    '';
+
     # ── PhotoGIMP icons ─────────────────────────────────────────────────────
     # Installs PhotoGIMP-branded icons into the user hicolor icon theme.
     # Uses recursive = true so individual per-file symlinks are created,
