@@ -177,6 +177,7 @@
       name = "Games";
       apps = [
         "org.prismlauncher.PrismLauncher.desktop"
+        "com.vysp3r.ProtonPlus.desktop"
       ];
     };
     "org/gnome/desktop/app-folders/folders/Office" = {
@@ -216,6 +217,7 @@
         "org.gnome.DiskUtility.desktop"
         "org.gnome.font-viewer.desktop"
         "htop.desktop"
+        "org.gnome.Logs.desktop"
       ];
     };
 
