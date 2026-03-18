@@ -56,19 +56,34 @@ in
       fi
     '';
 
-    # ── PhotoGIMP icon theme cache ───────────────────────────────────────────
-    # Rebuilds the GTK hicolor icon theme cache after xdg.dataFile places the
-    # PhotoGIMP icon symlinks. Without this, GTK cannot find Icon=photogimp
-    # and silently falls back to the GIMP icon.
-    home.activation.updatePhotogimpIconCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      $VERBOSE_ECHO "PhotoGIMP: updating hicolor icon theme cache"
-      if [ -d "$HOME/.local/share/icons/hicolor" ]; then
-        $DRY_RUN_CMD ${pkgs.gtk3}/bin/gtk-update-icon-cache \
-          --ignore-theme-index \
-          --force \
-          "$HOME/.local/share/icons/hicolor"
-      fi
-    '';
+    # ── Cleanup orphaned files from previous config iterations ──────────────
+    # Removes regular files (not symlinks) that block Home Manager from
+    # creating its managed symlinks. Must run BEFORE checkLinkTargets.
+    home.activation.cleanupPhotogimpOrphanFiles =
+      lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+        DESKTOP_FILE="$HOME/.local/share/applications/org.gimp.GIMP.desktop"
+        if [ -f "$DESKTOP_FILE" ] && [ ! -L "$DESKTOP_FILE" ]; then
+          $VERBOSE_ECHO "PhotoGIMP: removing orphaned desktop file (not a symlink)"
+          $DRY_RUN_CMD rm -f "$DESKTOP_FILE"
+        fi
+
+        for size in 16x16 32x32 48x48 64x64 128x128 256x256 512x512; do
+          ICON_FILE="$HOME/.local/share/icons/hicolor/$size/apps/photogimp.png"
+          if [ -f "$ICON_FILE" ] && [ ! -L "$ICON_FILE" ]; then
+            $VERBOSE_ECHO "PhotoGIMP: removing orphaned icon $size/apps/photogimp.png"
+            $DRY_RUN_CMD rm -f "$ICON_FILE"
+          fi
+        done
+
+        for stray in \
+          "$HOME/.local/share/icons/hicolor/photogimp.png" \
+          "$HOME/.local/share/icons/hicolor/256x256/256x256.png"; do
+          if [ -f "$stray" ] && [ ! -L "$stray" ]; then
+            $VERBOSE_ECHO "PhotoGIMP: removing stray file $stray"
+            $DRY_RUN_CMD rm -f "$stray"
+          fi
+        done
+      '';
 
     # ── PhotoGIMP icons ─────────────────────────────────────────────────────
     # Installs PhotoGIMP-branded icons into the user hicolor icon theme.
@@ -92,7 +107,7 @@ in
       genericName   = "Image Editor";
       comment       = "Create images and edit photographs";
       exec          = "flatpak run org.gimp.GIMP %U";
-      icon          = "photogimp";
+      icon          = "${photogimp}/.local/share/icons/hicolor/256x256/apps/photogimp.png";
       terminal      = false;
       startupNotify = true;
       categories    = [ "Graphics" "2DGraphics" "RasterGraphics" "GTK" ];
