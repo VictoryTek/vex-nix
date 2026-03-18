@@ -168,6 +168,57 @@
     "org/gnome/desktop/screensaver" = {
       lock-enabled = false;
     };
+    
+    
+    "org/gnome/desktop/app-folders" = {
+      folder-children = [ "Games" "Office" "Utilities" "System" ];
+    };
+    "org/gnome/desktop/app-folders/folders/Games" = {
+      name = "Games";
+      apps = [
+        "org.prismlauncher.PrismLauncher.desktop"
+      ];
+    };
+    "org/gnome/desktop/app-folders/folders/Office" = {
+      name = "Office";
+      apps = [
+        "org.onlyoffice.desktopeditors.desktop"
+        "org.gnome.TextEditor.desktop"
+        "org.gnome.Papers.desktop"
+      ];
+    };
+    "org/gnome/desktop/app-folders/folders/Utilities" = {
+      name = "Utilities";
+      apps = [
+        "com.mattjakeman.ExtensionManager.desktop"
+        "it.mijorus.gearlever.desktop"
+        "org.gnome.tweaks.desktop"
+        "io.github.flattool.Warehouse.desktop"
+        "io.missioncenter.MissionCenter.desktop"
+        "com.github.tchx84.Flatseal.desktop"
+      ];
+    };
+    "org/gnome/desktop/app-folders/folders/System" = {
+      name = "System";
+      apps = [
+        "org.pulseaudio.pavucontrol.desktop"
+        "rog-control-center.desktop"
+        "org.gnome.SystemMonitor.desktop"
+        "org.gnome.Settings.desktop"
+        "org.gnome.seahorse.Application.desktop"
+        "nixos-manual.desktop"
+        "cups.desktop"
+        "blivet-gui.desktop"
+        "blueman-manager.desktop"
+        "btop.desktop"
+        "ca.desrt.dconf-editor.desktop"
+        "org.gnome.baobab.desktop"
+        "org.gnome.DiskUtility.desktop"
+        "org.gnome.font-viewer.desktop"
+        "htop.desktop"
+      ];
+    };
+
   };
 
   # Let Home Manager manage itself
