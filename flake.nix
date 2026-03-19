@@ -17,6 +17,8 @@
 
     # Declarative Flatpak management
     # Provides: nixosModules.nix-flatpak, homeManagerModules.nix-flatpak
+    # No inputs.nixpkgs.follows — nix-flatpak has no inputs in its flake
+    # (outputs = _: { ... }); adding follows would be silently ignored.
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     # CachyOS kernels for NixOS

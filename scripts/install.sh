@@ -78,6 +78,16 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
+# ── Hostname validation ───────────────────────────────────────────────────────
+if [[ ! "$HOSTNAME" =~ ^[a-zA-Z][a-zA-Z0-9_-]*$ ]] || [[ ${#HOSTNAME} -gt 63 ]]; then
+    fail "Invalid hostname: '${HOSTNAME}'"
+    info "Hostname must:"
+    info "  - Start with a letter (a-z, A-Z)"
+    info "  - Contain only letters, digits, hyphens, or underscores"
+    info "  - Be 63 characters or fewer"
+    exit 1
+fi
+
 # ── Dry-run helper ────────────────────────────────────────────────────────────
 # Prefix all mutating commands with run() — in dry-run mode the command is
 # printed but NOT executed.
@@ -254,4 +264,30 @@ echo "  To update to the latest VexOS in future:"
 echo ""
 echo -e "  ${BLUE}cd /etc/nixos && sudo nix flake update && sudo git add flake.lock${NC}"
 echo -e "  ${BLUE}sudo nixos-rebuild switch --flake /etc/nixos#${HOSTNAME}${NC}"
+echo ""
+
+# ── Security checklist ───────────────────────────────────────────────────────
+echo ""
+echo -e "${YELLOW}============================================${NC}"
+echo -e "${YELLOW}  Security Checklist — Complete Before      ${NC}"
+echo -e "${YELLOW}  Connecting This Machine to a Network      ${NC}"
+echo -e "${YELLOW}============================================${NC}"
+echo ""
+echo "  1. Set a strong password for nimda from the local console:"
+echo ""
+echo -e "     ${BLUE}sudo passwd nimda${NC}"
+echo ""
+echo "  2. Add your SSH public key to hardware-configuration.nix or your host"
+echo "     config before rebuilding:"
+echo ""
+echo "     users.users.nimda.openssh.authorizedKeys.keys = ["
+echo '       "ssh-ed25519 AAAA... you@host"'
+echo "     ];"
+echo ""
+echo "     Then rebuild: sudo nixos-rebuild switch --flake /etc/nixos#${HOSTNAME}"
+echo ""
+echo "  3. Confirm SSH key-based login works before considering the machine"
+echo "     network-ready."
+echo ""
+echo -e "${RED}  WARNING: Do NOT expose port 22 until key-based auth is confirmed working.${NC}"
 echo ""

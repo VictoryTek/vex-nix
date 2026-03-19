@@ -16,7 +16,14 @@
 
 let
   cfg = config.kernel;
-  isCachyos = builtins.substring 0 7 cfg.type == "cachyos";
+  isCachyos = builtins.elem cfg.type [
+    "cachyos-gaming"
+    "cachyos-server"
+    "cachyos-desktop"
+    "cachyos-handheld"
+    "cachyos-lts"
+    "cachyos-hardened"
+  ];
 in {
 
   # ── Option Declaration ──────────────────────────────────────────────────

@@ -11,7 +11,6 @@
   boot.kernelParams = [
     "quiet"
     "splash"
-    "boot.shell_on_fail"
     "udev.log_priority=3"
     "rd.systemd.show_status=auto"
   ];
@@ -43,7 +42,6 @@
   # the UUID wait times out on VM guests.
   boot.initrd.systemd.enable = true;
 
-  # Hide grub menu on boot (press Shift during POST to interrupt).
-  boot.loader.grub.timeoutStyle = "hidden";
+  # Hide boot menu on boot (press Space during POST to show the systemd-boot menu).
   boot.loader.timeout = 0;
 }

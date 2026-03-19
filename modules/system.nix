@@ -19,11 +19,11 @@
   # Optimize Nix store
   nix.settings.auto-optimise-store = true;
 
-  # Limit parallel build jobs to reduce peak RAM usage during nixos-rebuild.
-  # Each Nix build job can consume several hundred MB; capping at 2 prevents
-  # the evaluator + linker from exhausting memory on machines with ≤8 GB RAM.
-  nix.settings.max-jobs = 2;
-  nix.settings.cores = 2;
+  # Nix build parallelism — auto-detected by default (uses all available cores).
+  # On machines with ≤8 GB RAM, add the following in hardware-configuration.nix
+  # to prevent OOM kills during large builds:
+  #   nix.settings.max-jobs = 2;
+  #   nix.settings.cores    = 2;
   # Increase download buffer to avoid "buffer is full" warnings when
   # downloads outpace store writes (common in VMs with slow virtual disks).
   nix.settings.download-buffer-size = 268435456; # 256 MiB
@@ -38,7 +38,13 @@
     enable = true;
     settings = {
       PermitRootLogin = "no";
-      PasswordAuthentication = true;  # Set to false and use keys for better security
+      # Secure production settings: password-based SSH login is disabled.
+      # Authenticate using an SSH public key only. Keys must be provisioned
+      # before enabling this service on a network-facing machine.
+      # Add your public key to modules/users.nix:
+      #   users.users.nimda.openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAA..." ];
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
     };
   };
 
@@ -58,7 +64,7 @@
         "hosts allow" = "192.168. 127.0.0.1 localhost";
         "hosts deny" = "0.0.0.0/0";
         "guest account" = "nobody";
-        "map to guest" = "bad user";
+        "map to guest" = "never";  # Fail explicitly on bad credentials; no silent guest fallback
       };
       public = {
         path = "/home/nimda/Public";
@@ -96,7 +102,11 @@
   # Power management
   services.power-profiles-daemon.enable = true;
 
-  # Docker
-  virtualisation.docker.enable = true;
-  virtualisation.docker.enableOnBoot = true;
+  # Docker (rootless) — daemon runs as 'nimda', socket at $XDG_RUNTIME_DIR/docker.sock.
+  # This eliminates the /run/docker.sock group-membership privilege escalation path.
+  # setSocketVariable = true injects DOCKER_HOST for all login sessions via PAM.
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
+  };
 }

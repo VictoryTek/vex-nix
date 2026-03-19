@@ -9,7 +9,11 @@
   services.displayManager.gdm.wayland = true;
   services.desktopManager.gnome.enable = true;
 
-  # Auto-login — skips the GDM lock screen on boot
+  # Auto-login — skips the GDM password prompt on boot (convenience feature).
+  # SECURITY INVARIANT: auto-login must NEVER be combined with
+  # `lock-enabled = false` in dconf. The screen lock in home/default.nix
+  # MUST remain enabled to prevent physical-access bypasses when the
+  # session is unattended. Do not set lock-enabled = false downstream.
   services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = "nimda";
 
@@ -37,7 +41,6 @@
     gnomeExtensions.caffeine
     gnomeExtensions.restart-to
     gnomeExtensions.blur-my-shell
-    gnomeExtensions.appindicator
     gnomeExtensions.background-logo
     gnome-boxes
   ];
@@ -49,27 +52,30 @@
   # TCG probing inside a VM is 10–30× slower than native; it takes > 120 s.
   # The default "--timeout 120" idle timer fires before probing completes,
   # causing libvirtd to exit mid-init with status=1/FAILURE ("Make forcefull
-  # daemon shutdown"). The three settings below fix this:
+  # daemon shutdown"). For VM guests where this occurs, apply these overrides
+  # per-machine in hardware-configuration.nix rather than globally:
   #
-  #   extraOptions "--timeout" "0"  — disables idle timeout; probing can
-  #                                   complete regardless of how long it takes.
-  #   security_driver = "none"      — skips SELinux/AppArmor probing (absent
-  #                                   in VirtualBox), reducing init latency.
-  #   TimeoutStartSec = "infinity"  — systemd never pre-empts a slow startup.
+  #   virtualisation.libvirtd.extraOptions = lib.mkForce [ "--timeout" "0" ];
+  #   systemd.services.libvirtd.serviceConfig.TimeoutStartSec = lib.mkForce "infinity";
   #
-  # All three are safe on bare-metal-with-KVM (probing is fast; settings are
-  # no-ops in that context).
+  #   security_driver = "none" (in qemu.verbatimConfig) — skips SELinux/AppArmor
+  #                              probing (absent in VirtualBox), reducing init latency.
   virtualisation.libvirtd = {
     enable = true;
-    extraOptions = [ "--timeout" "0" ];
+    # extraOptions is intentionally omitted — libvirtd's default 120 s idle
+    # timeout is correct for bare-metal machines with KVM.
+    # If running VexOS inside a VM without nested KVM (slow TCG probing),
+    # add this override in hardware-configuration.nix:
+    #   virtualisation.libvirtd.extraOptions = lib.mkForce [ "--timeout" "0" ];
     qemu.verbatimConfig = ''
       namespaces = []
       security_driver = "none"
     '';
   };
 
-  # Unlimited systemd startup window — defense-in-depth for slow TCG probing.
-  systemd.services.libvirtd.serviceConfig.TimeoutStartSec = lib.mkDefault "infinity";
+  # Give libvirtd 120 s to start — matches its own idle timeout on bare metal.
+  # VM users who set --timeout 0 above should also set TimeoutStartSec = "infinity".
+  systemd.services.libvirtd.serviceConfig.TimeoutStartSec = lib.mkDefault "120";
 
   # Installs virt-manager with polkit rules so non-root users can manage VMs
   programs.virt-manager.enable = true;

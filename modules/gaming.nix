@@ -43,20 +43,26 @@
       general = {
         renice = 10;
       };
-      gpu = {
-        apply_gpu_optimisations = "accept-responsibility";
-        gpu_device = 0;
-      };
+      # GPU optimisations are disabled by default — gpu_device = 0 targets the
+      # wrong GPU on hybrid (ASUS Optimus / supergfxd) systems.
+      # To enable, add the following to programs.gamemode.settings in
+      # hardware-configuration.nix, substituting the correct device index
+      # (verify with: cat /sys/class/drm/card*/device/vendor):
+      #   gpu = {
+      #     apply_gpu_optimisations = "accept-responsibility";
+      #     gpu_device = 1;  # 0 = iGPU, 1 = dGPU on most Optimus laptops
+      #   };
     };
   };
 
   # ── PipeWire Low Latency ─────────────────────────────────────────────
   # Extends the PipeWire configuration in configuration.nix.
-  # Theoretical latency: quantum/rate = 64/48000 ≈ 1.33ms
-  # If audio cuts out, increase quantum to 128 or 256.
+  # Theoretical latency: quantum/rate = 256/48000 ≈ 5.33ms
+  # If audio cuts out, increase quantum to 512.
+  # For pro-audio workloads, reduce to 64 (requires RT kernel + dedicated hardware).
   services.pipewire.lowLatency = {
     enable = true;
-    quantum = 64;
+    quantum = 256;  # ~5.33 ms at 48000 Hz — gaming balance; reduce to 64 for pro-audio
     rate = 48000;
   };
 }

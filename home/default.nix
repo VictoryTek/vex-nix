@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-unstable, inputs, ... }:
+{ config, lib, pkgs, pkgs-unstable, inputs, ... }:
 
 {
   imports = [
@@ -166,7 +166,11 @@
       dock-position = "LEFT";
     };
     "org/gnome/desktop/screensaver" = {
-      lock-enabled = false;
+      lock-enabled = true;   # Re-enabled: screen lock is security-critical on any unattended machine
+      lock-delay   = (lib.hm.gvariant.mkUint32 0);  # Lock immediately when screensaver activates
+    };
+    "org/gnome/session" = {
+      idle-delay = (lib.hm.gvariant.mkUint32 300);  # Screensaver activates after 5 minutes of inactivity
     };
     
     

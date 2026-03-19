@@ -27,8 +27,9 @@ fi
 # ── Step 2: Configuration evaluation ─────────────────────────────────────────
 echo ""
 echo "==> Step 2: NixOS configuration evaluation"
-EVAL_CMD="nix --extra-experimental-features 'nix-command flakes' eval .#nixosConfigurations.vexos.config.system.build.toplevel --apply builtins.typeOf"
-RESULT=$(eval "$EVAL_CMD" 2>&1) || true
+RESULT=$(nix --extra-experimental-features 'nix-command flakes' \
+  eval .#nixosConfigurations.vexos.config.system.build.toplevel \
+  --apply builtins.typeOf 2>&1) || RESULT=""
 if echo "$RESULT" | grep -qE '"string"|"set"'; then
   pass "Configuration evaluation (.#nixosConfigurations.vexos)"
 else
@@ -40,8 +41,9 @@ fi
 # ── Step 2b: Verify lib.mkVexosSystem is exported ────────────────────────────
 echo ""
 echo "==> Step 2b: Verify lib.mkVexosSystem output"
-LIB_CMD="nix --extra-experimental-features 'nix-command flakes' eval .#lib.mkVexosSystem --apply builtins.typeOf"
-LIB_RESULT=$(eval "$LIB_CMD" 2>&1) || true
+LIB_RESULT=$(nix --extra-experimental-features 'nix-command flakes' \
+  eval .#lib.mkVexosSystem \
+  --apply builtins.typeOf 2>&1) || LIB_RESULT=""
 if echo "$LIB_RESULT" | grep -q '"lambda"'; then
   pass "lib.mkVexosSystem is exported and is a function"
 else
