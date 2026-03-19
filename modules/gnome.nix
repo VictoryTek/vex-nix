@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # Enable the X11 windowing system (still required for XKB keyboard config and XWayland)
@@ -42,8 +42,35 @@
     gnome-boxes
   ];
 
-  # Virtualisation backend for GNOME Boxes and virt-manager
-  virtualisation.libvirtd.enable = true;
+  # Virtualisation backend for GNOME Boxes and virt-manager.
+  #
+  # Without KVM (e.g. VirtualBox with no nested virtualization enabled),
+  # QEMU falls back to TCG (software emulation) for capability probing.
+  # TCG probing inside a VM is 10–30× slower than native; it takes > 120 s.
+  # The default "--timeout 120" idle timer fires before probing completes,
+  # causing libvirtd to exit mid-init with status=1/FAILURE ("Make forcefull
+  # daemon shutdown"). The three settings below fix this:
+  #
+  #   extraOptions "--timeout" "0"  — disables idle timeout; probing can
+  #                                   complete regardless of how long it takes.
+  #   security_driver = "none"      — skips SELinux/AppArmor probing (absent
+  #                                   in VirtualBox), reducing init latency.
+  #   TimeoutStartSec = "infinity"  — systemd never pre-empts a slow startup.
+  #
+  # All three are safe on bare-metal-with-KVM (probing is fast; settings are
+  # no-ops in that context).
+  virtualisation.libvirtd = {
+    enable = true;
+    extraOptions = [ "--timeout" "0" ];
+    qemu.verbatimConfig = ''
+      namespaces = []
+      security_driver = "none"
+    '';
+  };
+
+  # Unlimited systemd startup window — defense-in-depth for slow TCG probing.
+  systemd.services.libvirtd.serviceConfig.TimeoutStartSec = lib.mkDefault "infinity";
+
   # Installs virt-manager with polkit rules so non-root users can manage VMs
   programs.virt-manager.enable = true;
   # USB passthrough support for virt-manager VMs

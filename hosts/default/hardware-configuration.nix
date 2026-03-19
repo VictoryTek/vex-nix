@@ -13,7 +13,12 @@
   # Boot configuration - UPDATE THESE FOR YOUR SYSTEM
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-intel" ];  # Change to "kvm-amd" for AMD processors
+  # Add "kvm-intel" (Intel VT-x) or "kvm-amd" (AMD-V) here when running on real
+  # hardware with hardware virtualization support enabled in the BIOS/UEFI.
+  # Leave this empty (or omit it entirely) when running in a VM without nested
+  # virtualization — loading kvm-intel/kvm-amd in a guest without VT-x access
+  # prevents /dev/kvm from being created and causes libvirtd to fail on startup.
+  boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
   # Filesystems - UPDATE THESE FOR YOUR SYSTEM
