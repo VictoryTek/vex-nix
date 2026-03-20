@@ -16,14 +16,7 @@
 
 let
   cfg = config.kernel;
-  isCachyos = builtins.elem cfg.type [
-    "cachyos-gaming"
-    "cachyos-server"
-    "cachyos-desktop"
-    "cachyos-handheld"
-    "cachyos-lts"
-    "cachyos-hardened"
-  ];
+  isCachyos = builtins.substring 0 7 cfg.type == "cachyos";
 in {
 
   # ── Option Declaration ──────────────────────────────────────────────────
@@ -129,15 +122,11 @@ in {
     (lib.mkIf isCachyos {
       nix.settings = {
         extra-substituters = [
-          # attic.xuyh0120.win (personal server) was removed — its private signing key
-          # has no revocation mechanism; a compromise would allow silent kernel substitution.
-          # If you accept this risk and need faster CachyOS kernel builds, you may re-add:
-          #   "https://attic.xuyh0120.win/lantian"
+          "https://attic.xuyh0120.win/lantian"
           "https://cache.garnix.io"
         ];
         extra-trusted-public-keys = [
-          # lantian key removed along with personal cache — see comment above.
-          # "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+          "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
           "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         ];
       };

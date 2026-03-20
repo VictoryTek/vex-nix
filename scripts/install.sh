@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/install.sh — Bootstrap a fresh NixOS machine using the thin /etc/nixos/ flake model.
+# scripts/install.sh — Migrate an existing NixOS system to the thin /etc/nixos/ flake model.
 # chmod +x scripts/install.sh
 set -euo pipefail
 
@@ -36,13 +36,13 @@ usage() {
     cat <<'EOF'
 Usage: sudo bash scripts/install.sh [OPTIONS]
 
-Bootstraps a fresh NixOS machine using the thin /etc/nixos/ flake model.
+Migrates an existing NixOS system to the thin /etc/nixos/ flake model.
 Requires hardware-configuration.nix to already exist at /etc/nixos/.
 
-  The NixOS live installer generates this with:
-    sudo nixos-generate-config
+  This script targets a running NixOS system — it is not suitable for use
+  from the NixOS live ISO installer.
 
-  This script then:
+  This script:
     1. Writes /etc/nixos/flake.nix (the thin VexOS consumer flake)
     2. Initialises /etc/nixos/ as a git repo (required for pure evaluation)
     3. Stages flake.nix and hardware-configuration.nix
