@@ -40,15 +40,6 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Bootloader (UEFI — systemd-boot)
-  # Requires an EFI System Partition mounted at /boot (vfat).
-  # For legacy BIOS/MBR hardware, override in hardware-configuration.nix:
-  #   boot.loader.systemd-boot.enable = false;
-  #   boot.loader.grub.enable = true;
-  #   boot.loader.grub.device = "/dev/sdX";  # replace with your actual disk
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   # Networking
   networking.networkmanager.enable = true;
 

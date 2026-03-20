@@ -6,7 +6,7 @@ A modular NixOS configuration with GNOME, flakes, SSH, Samba, and Tailscale.
 
 ### Fresh Install (New Machine)
 
-From a freshly installed NixOS system (your `/etc/nixos/hardware-configuration.nix` already exists):
+After the NixOS installer has finished, **reboot into your new system**, then run these steps. Your `/etc/nixos/hardware-configuration.nix` already exists from the installer.
 
 1. **Install git**
    ```bash

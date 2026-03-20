@@ -51,4 +51,12 @@
   #   namespaces = []
   #   security_driver = "none"
   # '';
+
+  # ── Bootloader ────────────────────────────────────────────────────────────
+  # nixos-generate-config sets the correct bootloader for your hardware.
+  # This sentinel uses systemd-boot for CI (UEFI with vfat /boot above).
+  # On a real machine, your generated hardware-configuration.nix already
+  # has the correct settings — no manual changes needed.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 }
