@@ -28,7 +28,7 @@ From a freshly installed NixOS system (your `/etc/nixos/hardware-configuration.n
      };
    }
    EOF
-   cd /etc/nixos && git init -b main && git add flake.nix hardware-configuration.nix
+   cd /etc/nixos && sudo git init -b main && sudo git add flake.nix hardware-configuration.nix
    ```
 
 3. **Rebuild and reboot**
