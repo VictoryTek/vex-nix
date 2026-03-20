@@ -129,11 +129,15 @@ in {
     (lib.mkIf isCachyos {
       nix.settings = {
         extra-substituters = [
-          "https://attic.xuyh0120.win/lantian"
+          # attic.xuyh0120.win (personal server) was removed — its private signing key
+          # has no revocation mechanism; a compromise would allow silent kernel substitution.
+          # If you accept this risk and need faster CachyOS kernel builds, you may re-add:
+          #   "https://attic.xuyh0120.win/lantian"
           "https://cache.garnix.io"
         ];
         extra-trusted-public-keys = [
-          "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+          # lantian key removed along with personal cache — see comment above.
+          # "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
           "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         ];
       };

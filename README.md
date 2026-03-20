@@ -8,24 +8,45 @@ A modular NixOS configuration with GNOME, flakes, SSH, Samba, and Tailscale.
 
 From the NixOS live installer environment:
 
-1. **Install git** (required by the bootstrap script)
+1. **Install git** (required for the git repository initialisation step)
    ```bash
    nix-shell -p git
    ```
 
-2. **Bootstrap the VexOS thin flake**
-   ```bash
-   curl -sL https://raw.githubusercontent.com/VictoryTek/vex-nix/main/scripts/install.sh | sudo bash
-   ```
-   This writes a minimal `/etc/nixos/flake.nix`, initialises `/etc/nixos/` as a
-   git repository (required for pure flake evaluation), and generates `flake.lock`.
+2. **Write the thin flake**
 
-3. **Activate**
+   ```bash
+   sudo tee /etc/nixos/flake.nix > /dev/null <<'EOF'
+   {
+     description = "VexOS local machine flake";
+
+     inputs.vexos.url = "github:VictoryTek/vex-nix";
+
+     outputs = { self, vexos }: {
+       nixosConfigurations.vexos = vexos.lib.mkVexosSystem {
+         hardwareModule = ./hardware-configuration.nix;
+       };
+     };
+   }
+   EOF
+   ```
+
+3. **Initialise the git repo and generate `flake.lock`**
+
+   ```bash
+   cd /etc/nixos
+   git init -b main
+   git add flake.nix hardware-configuration.nix
+   nix --extra-experimental-features 'nix-command flakes' flake update
+   git add flake.lock
+   ```
+
+4. **Activate**
    ```bash
    sudo nixos-rebuild switch --flake /etc/nixos#vexos
    ```
 
-4. **Reboot**
+5. **Reboot**
 
 ---
 
@@ -61,32 +82,31 @@ rebuild  # runs: nixos-rebuild switch (no upstream update)
 
 ---
 
-### Manual Bootstrap (no curl)
+### ⚠️ Alternative (Not Recommended): Using the Install Script
 
-If you prefer not to pipe curl to bash, write the thin flake manually:
+> ⚠️ **Warning:** The `curl | sudo bash` pattern downloads and executes arbitrary code
+> as root without any integrity verification. It is vulnerable to MITM attacks, DNS
+> hijacking, compromised CDN caches, and supply-chain attacks — even over HTTPS, because
+> TLS only protects the transport layer, not the origin. The `flake.lock` hash-pinning
+> that protects your system starts *after* a successful bootstrap; it offers no protection
+> for the bootstrap script itself. The manual steps above are the **recommended path**.
+> Use this option only if you understand the risks and have reviewed the script first.
+
+If you still want to use the install script, **download and inspect it before running**:
 
 ```bash
-sudo tee /etc/nixos/flake.nix > /dev/null <<'EOF'
-{
-  description = "VexOS local machine flake";
+# 1. Download the script
+curl -sL https://raw.githubusercontent.com/VictoryTek/vex-nix/main/scripts/install.sh \
+    -o /tmp/vexos-install.sh
 
-  inputs.vexos.url = "github:VictoryTek/vex-nix";
+# 2. Review the script contents before executing
+less /tmp/vexos-install.sh
 
-  outputs = { self, vexos }: {
-    nixosConfigurations.vexos = vexos.lib.mkVexosSystem {
-      hardwareModule = ./hardware-configuration.nix;
-    };
-  };
-}
-EOF
-
-cd /etc/nixos
-git init -b main
-git add flake.nix hardware-configuration.nix
-nix --extra-experimental-features 'nix-command flakes' flake update
-git add flake.lock
-sudo nixos-rebuild switch --flake /etc/nixos#vexos
+# 3. Run it only after inspection
+sudo bash /tmp/vexos-install.sh
 ```
+
+Never pipe `curl` output directly to `bash` or `sudo bash`. Always download first, inspect, then execute.
 
 > **Note:** `scripts/deploy.sh` is deprecated and will print a migration guide
 > if invoked. Use `scripts/install.sh` for first-time setup instead.

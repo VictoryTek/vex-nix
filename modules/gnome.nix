@@ -62,15 +62,17 @@
   #                              probing (absent in VirtualBox), reducing init latency.
   virtualisation.libvirtd = {
     enable = true;
-    # extraOptions is intentionally omitted — libvirtd's default 120 s idle
-    # timeout is correct for bare-metal machines with KVM.
-    # If running VexOS inside a VM without nested KVM (slow TCG probing),
-    # add this override in hardware-configuration.nix:
-    #   virtualisation.libvirtd.extraOptions = lib.mkForce [ "--timeout" "0" ];
-    qemu.verbatimConfig = ''
-      namespaces = []
-      security_driver = "none"
-    '';
+    # qemu.verbatimConfig is intentionally absent — NixOS defaults to the DAC
+    # security driver, which confines QEMU processes to the libvirt-qemu user/group
+    # with cgroup ACLs. This prevents a VM escape from reaching the host user env.
+    #
+    # If you are running NixOS inside a hypervisor (VM-in-VM, e.g. VirtualBox) without
+    # nested KVM support, add the following ONLY in that machine's hardware-configuration.nix:
+    #
+    #   virtualisation.libvirtd.qemu.verbatimConfig = ''
+    #     namespaces = []
+    #     security_driver = "none"
+    #   '';
   };
 
   # Give libvirtd 120 s to start — matches its own idle timeout on bare metal.

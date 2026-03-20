@@ -41,4 +41,14 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
   # For AMD: hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  # ── VM-in-VM workaround ──────────────────────────────────────────────────────
+  # Uncomment the block below ONLY if this machine is running NixOS inside a
+  # hypervisor (e.g. VirtualBox) that lacks nested KVM support. Enabling this
+  # globally in a module is a security risk — it disables QEMU DAC confinement.
+  #
+  # virtualisation.libvirtd.qemu.verbatimConfig = ''
+  #   namespaces = []
+  #   security_driver = "none"
+  # '';
 }
