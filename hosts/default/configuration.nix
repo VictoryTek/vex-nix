@@ -11,6 +11,7 @@
     ../../modules/flatpak.nix
     ../../modules/plymouth.nix
     ../../modules/kernel.nix
+    ../../modules/bootloader.nix
   ];
 
   # GPU driver selection — set to "nvidia", "amd", "intel", or "none"
@@ -21,6 +22,9 @@
   #        "cachyos-handheld", "cachyos-lts", "cachyos-hardened",
   #        "bazzite" (placeholder — requires vex-kernels flake)
   kernel.type = "stock";
+
+  # Bootloader — set to "grub" for legacy BIOS/MBR systems (also set vexos.bootLoader.grub.device)
+  vexos.bootLoader.type = "systemd-boot";
 
   # Hostname
   networking.hostName = "vexos";

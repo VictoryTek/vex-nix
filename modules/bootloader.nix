@@ -1,20 +1,16 @@
 # modules/bootloader.nix
 #
 # Declarative bootloader selection module.
-# Auto-detects UEFI vs BIOS at evaluation time via /sys/firmware/efi.
+# Defaults to systemd-boot (UEFI). Override explicitly for BIOS/MBR systems.
 #
-# On BIOS/MBR systems, set the install disk in hardware-configuration.nix:
+# On BIOS/MBR systems, set these in your hardware-configuration.nix:
+#   vexos.bootLoader.type = "grub";
 #   vexos.bootLoader.grub.device = "/dev/sda";  # replace with your actual disk
-#
-# To override auto-detection:
-#   vexos.bootLoader.type = "systemd-boot";  # force UEFI
-#   vexos.bootLoader.type = "grub";          # force BIOS
 
 { config, lib, ... }:
 
 let
-  cfg      = config.vexos.bootLoader;
-  isUefi   = builtins.pathExists /sys/firmware/efi;
+  cfg = config.vexos.bootLoader;
 in {
 
   # ── Option Declaration ──────────────────────────────────────────────────
@@ -22,11 +18,10 @@ in {
 
     type = lib.mkOption {
       type    = lib.types.enum [ "systemd-boot" "grub" ];
-      default = if isUefi then "systemd-boot" else "grub";
+      default = "systemd-boot";
       description = ''
-        Bootloader to configure. Auto-detected from /sys/firmware/efi at
-        evaluation time: UEFI systems get systemd-boot, BIOS/MBR systems
-        get grub. Override explicitly if auto-detection is incorrect.
+        Bootloader to configure. Defaults to "systemd-boot" for UEFI systems.
+        Set to "grub" for legacy BIOS/MBR systems (and set grub.device).
           "systemd-boot" — UEFI systems with an EFI System Partition at /boot.
           "grub"         — Legacy BIOS/MBR systems (requires grub.device to be set).
       '';

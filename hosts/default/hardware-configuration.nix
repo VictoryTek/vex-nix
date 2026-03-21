@@ -53,10 +53,9 @@
   # '';
 
   # ── Bootloader ────────────────────────────────────────────────────────────
-  # nixos-generate-config sets the correct bootloader for your hardware.
-  # This sentinel uses systemd-boot for CI (UEFI with vfat /boot above).
-  # On a real machine, your generated hardware-configuration.nix already
-  # has the correct settings — no manual changes needed.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Bootloader override — only needed for legacy BIOS/MBR systems.
+  # The default (UEFI/systemd-boot) is configured in flake via vexos.bootLoader.type = "systemd-boot".
+  # For BIOS/MBR, add these lines in your local hardware-configuration.nix:
+  #   vexos.bootLoader.type = "grub";
+  #   vexos.bootLoader.grub.device = "/dev/sda";  # replace with your actual disk
 }
