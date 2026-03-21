@@ -27,10 +27,10 @@
     fsType = "ext4";
   };
 
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-label/boot";  # Update this
-    fsType = "vfat";
-  };
+  # fileSystems."/boot" = {
+  #   device = "/dev/disk/by-label/boot";  # Only needed for UEFI/ESP systems
+  #   fsType = "vfat";
+  # };
 
   # Swap - UPDATE OR REMOVE
   # swapDevices = [ 
@@ -53,9 +53,8 @@
   # '';
 
   # ── Bootloader ────────────────────────────────────────────────────────────
-  # Bootloader override — only needed for legacy BIOS/MBR systems.
-  # The default (UEFI/systemd-boot) is configured in flake via vexos.bootLoader.type = "systemd-boot".
-  # For BIOS/MBR, add these lines in your local hardware-configuration.nix:
-  #   vexos.bootLoader.type = "grub";
-  #   vexos.bootLoader.grub.device = "/dev/sda";  # replace with your actual disk
+  # This VM uses legacy BIOS/MBR — override the default systemd-boot here.
+  # Run `lsblk` to confirm the correct disk device (e.g. /dev/sda, /dev/vda).
+  vexos.bootLoader.type = "grub";
+  vexos.bootLoader.grub.device = "/dev/sda";  # UPDATE: verify with `lsblk`
 }

@@ -23,9 +23,6 @@
   #        "bazzite" (placeholder — requires vex-kernels flake)
   kernel.type = "stock";
 
-  # Bootloader — set to "grub" for legacy BIOS/MBR systems (also set vexos.bootLoader.grub.device)
-  vexos.bootLoader.type = "systemd-boot";
-
   # Hostname
   networking.hostName = "vexos";
 
