@@ -53,8 +53,13 @@
   # '';
 
   # ── Bootloader ────────────────────────────────────────────────────────────
-  # This VM uses legacy BIOS/MBR — override the default systemd-boot here.
-  # Run `lsblk` to confirm the correct disk device (e.g. /dev/sda, /dev/vda).
-  vexos.bootLoader.type = "grub";
-  vexos.bootLoader.grub.device = "/dev/sda";  # UPDATE: verify with `lsblk`
+  # Set your bootloader here. Examples:
+  #
+  # UEFI (systemd-boot):
+  #   boot.loader.systemd-boot.enable = true;
+  #   boot.loader.efi.canTouchEfiVariables = true;
+  #
+  # Legacy BIOS/MBR (GRUB):
+  #   boot.loader.grub.enable = true;
+  #   boot.loader.grub.device = "/dev/sda";  # verify with `lsblk`
 }

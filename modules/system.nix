@@ -1,7 +1,14 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # System-wide configuration
+
+  # ── Bootloader defaults ──────────────────────────────────────────────────────
+  # Fallback bootloader for UEFI systems. Uses lib.mkDefault so any
+  # hardware-configuration.nix can override with a plain assignment
+  # (e.g. boot.loader.grub.enable = true) without needing lib.mkForce.
+  boot.loader.systemd-boot.enable      = lib.mkDefault true;
+  boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
 
   # Auto upgrade (optional, commented out by default)
   # system.autoUpgrade = {

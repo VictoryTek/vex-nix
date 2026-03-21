@@ -11,7 +11,6 @@
     ../../modules/flatpak.nix
     ../../modules/plymouth.nix
     ../../modules/kernel.nix
-    ../../modules/bootloader.nix
   ];
 
   # GPU driver selection — set to "nvidia", "amd", "intel", or "none"
