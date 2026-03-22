@@ -53,13 +53,21 @@
   # '';
 
   # ── Bootloader ────────────────────────────────────────────────────────────
-  # Set your bootloader here. Examples:
+  # This template uses GRUB (legacy BIOS/MBR) so `nix flake check` passes
+  # without requiring an EFI System Partition to be defined.
   #
-  # UEFI (systemd-boot):
-  #   boot.loader.systemd-boot.enable = true;
-  #   boot.loader.efi.canTouchEfiVariables = true;
+  # On real hardware, replace with the appropriate config for your firmware:
+  #
+  # UEFI (systemd-boot — most modern hardware):
+  #   Remove the three grub lines below and add:
+  #   fileSystems."/boot" = { device = "/dev/disk/by-uuid/XXXX"; fsType = "vfat"; };
+  #   (system.nix already enables systemd-boot via lib.mkDefault — nothing else needed)
   #
   # Legacy BIOS/MBR (GRUB):
-  #   boot.loader.grub.enable = true;
-  #   boot.loader.grub.device = "/dev/sda";  # verify with `lsblk`
+  #   Keep the lines below and update the device path (check with `lsblk`).
+  #
+  # A plain assignment here overrides the lib.mkDefault in system.nix; no lib.mkForce needed.
+  boot.loader.systemd-boot.enable  = false;
+  boot.loader.grub.enable          = true;
+  boot.loader.grub.device          = "/dev/sda";  # UPDATE: verify with `lsblk`
 }
